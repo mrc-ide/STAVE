@@ -11,5 +11,12 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    R6
+    dplyr,
+    lubridate,
+    R6,
+    stringr
 RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0),
+    readxl
+Config/testthat/edition: 3

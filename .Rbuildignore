@@ -3,3 +3,4 @@
 ignore/
 R_ignore/
 LICENSE.md
+^inst/extdata/.*/~\$
