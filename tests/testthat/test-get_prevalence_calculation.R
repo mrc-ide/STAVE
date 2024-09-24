@@ -15,11 +15,16 @@ test_that("get_prevalence() checks calculations return the expected values", {
   
   # calculate prevalence
   p <- z$get_prevalence("crt:72:C")
-  expect_equal(p$variant_num, 4)
-  expect_equal(p$total_num, 30)
+  expect_equal(p$numerator, 4)
+  expect_equal(p$denominator, 30)
   
-  p <- z$get_prevalence("crt:72_73:A_A")
-  expect_equal(p$variant_num, 2)
-  expect_equal(p$total_num, 20)
+  p <- z$get_prevalence("crt:72_73:A_A", keep_ambiguous = TRUE, prev_from_min = TRUE)
+  expect_equal(p$numerator_min, 1)
+  expect_equal(p$numerator_max, 2)
+  expect_equal(p$denominator, 20)
+  
+  p <- z$get_prevalence("k13:580:Y")
+  expect_equal(p$numerator, 0)
+  expect_equal(p$denominator, 0)
   
 })

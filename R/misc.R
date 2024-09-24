@@ -147,25 +147,6 @@ variant_to_list <- function(variant_string) {
 }
 
 #------------------------------------------------
-#' @title Vector of allowed country names
-#'
-#' @description 
-#' Get a vector of allowed country names for use in the survey table. These
-#' names were taken from GADM 4.1.
-#' 
-#' @export
-
-allowed_country_names <- function() {
-  
-  # get the full path to the file in the extdata directory
-  file_path <- system.file("extdata", "country_names.rds", package = "STAVE")
-  
-  # read the data and return
-  ret <- readRDS(file_path)
-  return(ret)
-}
-
-#------------------------------------------------
 #' @title String of allowed amino acids
 #'
 #' @description 
@@ -209,4 +190,11 @@ disallowed_variant_strings <- function() {
   # read the data and return
   ret <- readRDS(file_path)
   return(ret)
+}
+
+#------------------------------------------------
+# wrap a character string at a fixed number of characters
+#' @noRd
+wrap_message <- function(x, width = 80) {
+  paste(strwrap(x, width = width), collapse = "\n")
 }

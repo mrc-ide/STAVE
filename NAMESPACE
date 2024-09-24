@@ -2,7 +2,6 @@
 
 export(STAVE_object)
 export(allowed_amino_acids)
-export(allowed_country_names)
 export(disallowed_variant_strings)
 import(dplyr)
 importFrom(R6,R6Class)

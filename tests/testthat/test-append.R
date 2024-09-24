@@ -33,3 +33,21 @@ test_that("examples of append failing on invalid data", {
   }
   
 })
+
+test_that("examples of append working when data contains many missing fields", {
+  
+  # read in correctly formatted data from inst/extdata
+  file_path <- system.file("extdata", "structure_tests/correct_01.xlsx", package = "STAVE")
+  input_studies <- readxl::read_excel(file_path, sheet = "studies")
+  input_surveys <- readxl::read_excel(file_path, sheet = "surveys")
+  input_counts <- readxl::read_excel(file_path, sheet = "counts")
+  
+  # make object and load data
+  z <- STAVE_object$new()
+  expect_error(suppressMessages(z$append_data(studies_dataframe = input_studies,
+                                              surveys_dataframe = input_surveys,
+                                              counts_dataframe = input_counts)), NA)
+  
+  
+  
+})

@@ -129,12 +129,27 @@ STAVE_object <- R6::R6Class(
     #'   max numerator are reported that either exclude all ambiguous calls
     #'   (min) or include all ambiguous calls (max). If \code{FALSE} (the
     #'   default) then only the min is reported.
+    #' @param prev_from_min the output object includes a point estimate of the
+    #'   prevalence along with exact binomial confidence intervals. These must
+    #'   be calculated from one of \code{numerator_min} or \code{numerator_max}
+    #'   in the case of ambiguous calls. This argument sets which one of these
+    #'   numerators is used in the calculation.
     #'   
     #'   @import dplyr
-    get_prevalence = function(target_variant, keep_ambiguous = FALSE) {
+    get_prevalence = function(target_variant, keep_ambiguous = FALSE, prev_from_min = TRUE) {
+      
+      # basic input checks
+      assert_single_string(target_variant)
+      assert_single_logical(keep_ambiguous)
+      assert_single_logical(prev_from_min)
       
       # check that the target_variant is in long-string format
       private$check_variant_string(target_variant)
+      
+      # can only calculate prev from max if keeping ambiguous
+      if (!keep_ambiguous & !prev_from_min) {
+        stop(wrap_message("keep_ambiguous must be TRUE in order to calculate from max values (i.e. when using prev_from_min = FALSE)"))
+      }
       
       # check no hets in target_variant
       if (grepl("[/|]", target_variant)) {
@@ -167,12 +182,13 @@ STAVE_object <- R6::R6Class(
                       variant_drop_match = private$get_variant_matches(target_variant = target_variant_drop))
       
       # inform user if there are ambiguous counts to consider
-      if ((keep_ambiguous == FALSE) & any(df_combined$variant_match == "Ambiguous")) {
-        warning(paste("There are some ambiguous matches to the target sequence due to mixed",
-                      "infections. Consider running with keep_ambiguous = TRUE to return both",
-                      "upper and lower bounds on the numerator. Currently ignoring all ambiguous",
-                      "matches, which may bias prevalence downward",
-                      collapse = " "))
+      any_ambiguous <- any(df_combined$variant_match == "Ambiguous")
+      if ((keep_ambiguous == FALSE) & any_ambiguous) {
+        warning(wrap_message(paste("There are some ambiguous matches to the target sequence due to mixed",
+                                   "infections. Consider running with keep_ambiguous = TRUE to return both",
+                                   "upper and lower bounds on the numerator. Currently ignoring all ambiguous",
+                                   "matches, which may lead to prevalence being biased downward",
+                                   collapse = " ")))
       }
       
       # perform filtering, grouping, and first step aggregation of numerator
@@ -182,7 +198,7 @@ STAVE_object <- R6::R6Class(
         dplyr::mutate(row_number = dplyr::row_number()) |>
         dplyr::filter(variant_match == "Yes") |>
         dplyr::group_by(study_ID, survey_ID, variant_drop) |>
-        dplyr::summarise(variant_num_min = sum(variant_num),
+        dplyr::summarise(numerator_min = sum(variant_num),
                          row_number = row_number[1],
                          .groups = "drop") |>
         dplyr::ungroup()
@@ -191,7 +207,7 @@ STAVE_object <- R6::R6Class(
       # same locus
       df_numerator_unambiguous <- df_numerator_unambiguous_stage1 |>
         dplyr::group_by(study_ID, survey_ID) |>
-        dplyr::summarise(variant_num_min = sum(variant_num_min),
+        dplyr::summarise(numerator_min = sum(numerator_min),
                          row_number = row_number[1],
                          .groups = "drop") |>
         dplyr::ungroup() |>
@@ -204,7 +220,7 @@ STAVE_object <- R6::R6Class(
         dplyr::mutate(row_number = dplyr::row_number()) |>
         dplyr::filter(variant_drop_match == "Yes") |>
         dplyr::group_by(study_ID, survey_ID, variant_drop) |>
-        dplyr::summarise(total_num = total_num[1],
+        dplyr::summarise(denominator = total_num[1],
                          row_number = row_number[1],
                          .groups = "drop") |>
         dplyr::ungroup()
@@ -213,7 +229,7 @@ STAVE_object <- R6::R6Class(
       # same locus
       df_denominator <- df_denominator_stage1 |>
         dplyr::group_by(study_ID, survey_ID) |>
-        dplyr::summarise(total_num = sum(total_num),
+        dplyr::summarise(denominator = sum(denominator),
                          row_number = row_number[1],
                          .groups = "drop") |>
         dplyr::ungroup() |>
@@ -232,7 +248,7 @@ STAVE_object <- R6::R6Class(
           dplyr::mutate(row_number = dplyr::row_number()) |>
           dplyr::filter(variant_match  %in% c("Yes", "Ambiguous")) |>
           dplyr::group_by(study_ID, survey_ID, variant_drop) |>
-          dplyr::summarise(variant_num_max = sum(variant_num),
+          dplyr::summarise(numerator_max = sum(variant_num),
                            row_number = row_number[1],
                            .groups = "drop") |>
           dplyr::ungroup()
@@ -241,7 +257,7 @@ STAVE_object <- R6::R6Class(
         # same locus
         df_numerator_ambiguous <- df_numerator_ambiguous_stage1 |>
           dplyr::group_by(study_ID, survey_ID) |>
-          dplyr::summarise(variant_num_max = sum(variant_num_max),
+          dplyr::summarise(numerator_max = sum(numerator_max),
                            row_number = row_number[1],
                            .groups = "drop") |>
           dplyr::ungroup() |>
@@ -257,13 +273,50 @@ STAVE_object <- R6::R6Class(
       df_prev <- df_numerator |>
         dplyr::left_join(df_denominator, by = dplyr::join_by(study_ID, survey_ID))
       
+      # calculate prevalence point estimate and 95% exact binomial confidence
+      # intervals
+      if (nrow(df_prev) == 0) {
+        df_prev <- df_prev |>
+          dplyr::mutate(prevalence = NA,
+                        prevalence_lower = NA,
+                        prevalence_upper = NA)
+      } else {
+        if (prev_from_min) {
+          prev_CI <- mapply(function(x, n) binom.test(x, n)$conf.int, df_prev$numerator_min, df_prev$denominator)
+          df_prev <- df_prev |>
+            dplyr::mutate(prevalence = numerator_min / denominator,
+                          prevalence_lower = prev_CI[1,],
+                          prevalence_upper = prev_CI[2,])
+          
+        } else {
+          prev_CI <- mapply(function(x, n) binom.test(x, n)$conf.int, df_prev$numerator_max, df_prev$denominator)
+          df_prev <- df_prev |>
+            dplyr::mutate(prevalence = numerator_max / denominator,
+                          prevalence_lower = prev_CI[1,],
+                          prevalence_upper = prev_CI[2,])
+        }
+      }
+      
       # tidy up names
       if (!keep_ambiguous) {
         df_prev <- df_prev |>
-          dplyr::rename(variant_num = variant_num_min)
+          dplyr::rename(numerator = numerator_min)
       }
       
-      ret <- df_prev
+      # merge back with all study and survey info
+      ret <- private$studies |>
+        dplyr::right_join(surveys_ID, by = "study_ID") |>
+        dplyr::left_join(df_prev, by = dplyr::join_by(study_ID, survey_ID))
+      
+      # replace some NAs with zeros
+      if (keep_ambiguous) {
+        ret$numerator_min <- ifelse(is.na(ret$numerator_min), 0, ret$numerator_min)
+        ret$numerator_max <- ifelse(is.na(ret$numerator_max), 0, ret$numerator_max)
+      } else {
+        ret$numerator <- ifelse(is.na(ret$numerator), 0, ret$numerator)
+      }
+      ret$denominator <- ifelse(is.na(ret$denominator), 0, ret$denominator)
+      
       return(ret)
     },
     
@@ -309,12 +362,18 @@ STAVE_object <- R6::R6Class(
       assert_ncol(studies_dataframe, 6)
       assert_eq(names(studies_dataframe), c("study_ID", "study_name", "study_type", "authors", "publication_year", "url"))
       assert_string(studies_dataframe$study_ID)
-      assert_string(studies_dataframe$study_name)
-      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "other"))
-      assert_string(studies_dataframe$authors)
-      assert_pos_int(studies_dataframe$publication_year, zero_allowed = FALSE)
-      assert_string(studies_dataframe$url)
       assert_valid_string(studies_dataframe$study_ID, message_name = "study_ID in studies_dataframe")
+      if (!all(is.na(studies_dataframe$study_name))) {
+        assert_string(studies_dataframe$study_name)
+      }
+      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "other"))
+      if (!all(is.na(studies_dataframe$authors))) {
+        assert_string(studies_dataframe$authors)
+      }
+      if (!all(is.na(studies_dataframe$publication_year))) {
+        assert_pos_int(studies_dataframe$publication_year, zero_allowed = FALSE)
+      }
+      assert_string(studies_dataframe$url)
     },
     
     # -----------------------------------
@@ -338,24 +397,28 @@ STAVE_object <- R6::R6Class(
       assert_valid_string(surveys_dataframe$survey_ID, message_name = "survey_ID in surveys_dataframe")
       assert_string(surveys_dataframe$study_key)
       assert_valid_string(surveys_dataframe$study_key, message_name = "study_key in surveys_dataframe")
-      assert_in(surveys_dataframe$country_name, allowed_country_names(),
-                message = "country_name in surveys_dataframe must be a valid name. See allowed_country_names() for a list of valid names")
-      assert_string(surveys_dataframe$site_name)
+      
+      if (!all(is.na(surveys_dataframe$country_name))) {
+        assert_string(surveys_dataframe$country_name)
+      }
+      if (!all(is.na(surveys_dataframe$site_name))) {
+        assert_string(surveys_dataframe$site_name)
+      }
       assert_bounded(surveys_dataframe$lat, left = -180, right = 180)
-      assert_bounded(surveys_dataframe$lon, left = 0, right = 360)
-      assert_string(surveys_dataframe$spatial_notes)
-      assert_valid_ymd(surveys_dataframe$collection_start)
-      assert_valid_ymd(surveys_dataframe$collection_end)
+      assert_bounded(surveys_dataframe$lon, left = -180, right = 180)
+      if (!all(is.na(surveys_dataframe$spatial_notes))) {
+        assert_string(surveys_dataframe$spatial_notes)
+      }
+      if (!all(is.na(surveys_dataframe$collection_start))) {
+        assert_string(surveys_dataframe$collection_start)
+      }
+      if (!all(is.na(surveys_dataframe$collection_end))) {
+        assert_string(surveys_dataframe$collection_end)
+      }
       assert_valid_ymd(surveys_dataframe$collection_day)
-      assert_string(surveys_dataframe$time_notes)
-      
-      t0 <- lubridate::as_date(surveys_dataframe$collection_start)
-      t1 <- lubridate::as_date(surveys_dataframe$collection_end)
-      t <- lubridate::as_date(surveys_dataframe$collection_day)
-      
-      assert_date_greq(t1, t0, message = "collection_end must be on or after collection_start")
-      assert_date_bounded(t, left = t0, right = t1)
-      
+      if (!all(is.na(surveys_dataframe$time_notes))) {
+        assert_string(surveys_dataframe$time_notes)
+      }
     },
     
     # -----------------------------------
@@ -583,7 +646,7 @@ STAVE_object <- R6::R6Class(
         message("The following issues were found in variant_string:")
         for (i in seq_along(valid)) {
           if (!valid[i]) {
-            message(sprintf("  - row %s: %s", i, reason[i]))
+            message(wrap_message(sprintf("  - row %s: %s", i, reason[i])))
           }
         }
         
@@ -618,39 +681,39 @@ STAVE_object <- R6::R6Class(
       # studies_dataframe:
       assert_noduplicates(studies_dataframe$study_ID)
       if (any(studies_dataframe$study_ID %in% private$studies$study_ID)) {
-        stop(paste("studies_dataframe cannot contain any study_IDs that already exist in the loaded",
-                   "studies table. If you want to add to an existing study then you must first drop the",
-                   "currently loaded version. See ?drop_study() for how to do this", collapse = ""))
+        stop(wrap_message(paste("studies_dataframe cannot contain any study_IDs that already exist in the loaded",
+                                "studies table. If you want to add to an existing study then you must first drop the",
+                                "currently loaded version. See ?drop_study() for how to do this", collapse = "")))
       }
       if (!all(studies_dataframe$study_ID %in% surveys_dataframe$study_key)) {
-        stop(paste("every study_ID in the studies_dataframe must be referenced at least once in the",
-                   "study_key column of the surveys_dataframe", collapse = ""))
+        stop(wrap_message(paste("every study_ID in the studies_dataframe must be referenced at least once in the",
+                                "study_key column of the surveys_dataframe", collapse = "")))
       }
       
       # surveys_dataframe:
       # make unique ID as combination of study and survey IDs
       UID <- paste(surveys_dataframe$study_key, surveys_dataframe$survey_ID)
-      assert_noduplicates(UID, message = paste("survey_IDs are allowed to be re-used between studies,",
-                                               "but the same survey_ID cannot be used within a study",
-                                               collapse = ""))
+      assert_noduplicates(UID, message = wrap_message(paste("survey_IDs are allowed to be re-used between studies,",
+                                                            "but the same survey_ID cannot be used within a study",
+                                                            collapse = "")))
       if (!all(surveys_dataframe$study_key %in% studies_dataframe$study_ID)) {
-        stop(paste("every study_key in the surveys_dataframe must be present as a study_ID in the",
-                   "studies_dataframe", collapse = ""))
+        stop(wrap_message(paste("every study_key in the surveys_dataframe must be present as a study_ID in the",
+                                "studies_dataframe", collapse = "")))
       }
       if (!all(surveys_dataframe$survey_ID %in% counts_dataframe$survey_key)) {
-        stop(paste("every survey_ID in the surveys_dataframe must be referenced at least once in the",
-                   "survey_key column of the counts_dataframe", collapse = ""))
+        stop(wrap_message(paste("every survey_ID in the surveys_dataframe must be referenced at least once in the",
+                                "survey_key column of the counts_dataframe", collapse = "")))
       }
       
       # counts_dataframe:
       if (!all(counts_dataframe$survey_key %in% surveys_dataframe$survey_ID)) {
-        stop(paste("every survey_key in the counts_dataframe must be present as a survey_ID in the",
-                   "surveys_dataframe", collapse = ""))
+        stop(wrap_message(paste("every survey_key in the counts_dataframe must be present as a survey_ID in the",
+                                "surveys_dataframe", collapse = "")))
       }
       
       if (any(duplicated(sort_gene_name(counts_dataframe$variant_string)))) {
-        stop(paste("the exact same variant cannot be present more than once in the same survey.",
-                   "This includes the same variant with the genes listed in different order", collapse = ""))
+        stop(wrap_message(paste("the exact same variant cannot be present more than once in the same survey.",
+                                "This includes the same variant with the genes listed in different order", collapse = "")))
       }
       
       # get number of distinct variants per survey
@@ -661,9 +724,9 @@ STAVE_object <- R6::R6Class(
         dplyr::pull(distinct_total_num)
       
       if (any(distinct_variants > 1)) {
-        stop(paste("If there are multiple rows in a survey that correspond to the same gene-locus",
-                   "combination then they must have the same total_num. This includes variants",
-                   "with heterozygous calls", collapse = ""))
+        stop(wrap_message(paste("If there are multiple rows in a survey that correspond to the same gene-locus",
+                                "combination then they must have the same total_num. This includes variants",
+                                "with heterozygous calls", collapse = "")))
       }
       
       # sum variants and determine if any where counts exceed the total_num

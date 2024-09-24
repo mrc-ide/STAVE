@@ -124,7 +124,11 @@ in the surveys_dataframe.}
 \subsection{Method \code{get_prevalence()}}{
 Calculate prevalence
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_prevalence(target_variant, keep_ambiguous = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_prevalence(
+  target_variant,
+  keep_ambiguous = FALSE,
+  prev_from_min = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -141,7 +145,13 @@ sequence A/C_A/C_A or it may not, these are unphased genotypes so we
 cannot be sure. If \code{keep_ambiguous = TRUE} then both a min and a
 max numerator are reported that either exclude all ambiguous calls
 (min) or include all ambiguous calls (max). If \code{FALSE} (the
-default) then only the min is reported.
+default) then only the min is reported.}
+
+\item{\code{prev_from_min}}{the output object includes a point estimate of the
+prevalence along with exact binomial confidence intervals. These must
+be calculated from one of \code{numerator_min} or \code{numerator_max}
+in the case of ambiguous calls. This argument sets which one of these
+numerators is used in the calculation.
 
 @import dplyr}
 }
