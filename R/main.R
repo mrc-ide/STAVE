@@ -711,7 +711,14 @@ STAVE_object <- R6::R6Class(
                                 "surveys_dataframe", collapse = "")))
       }
       
-      if (any(duplicated(sort_gene_name(counts_dataframe$variant_string)))) {
+      # get whether each variant is present more than once (should not be after sorting alphabetically)
+      variant_duplicated <- counts_dataframe |>
+        dplyr::mutate(variant_string_order = sort_gene_name(variant_string)) |>
+        dplyr::group_by(survey_key, variant_string_order) |>
+        dplyr::summarise(variant_duplicated = any(duplicated(variant_string_order)), .groups = "drop") |>
+        dplyr::pull(variant_duplicated)
+      
+      if (any(variant_duplicated)) {
         stop(wrap_message(paste("the exact same variant cannot be present more than once in the same survey.",
                                 "This includes the same variant with the genes listed in different order", collapse = "")))
       }

@@ -48,6 +48,20 @@ test_that("examples of append working when data contains many missing fields", {
                                               surveys_dataframe = input_surveys,
                                               counts_dataframe = input_counts)), NA)
   
+})
+
+test_that("further example of data that should pass", {
   
+  # read in correctly formatted data from inst/extdata
+  file_path <- system.file("extdata", "structure_tests/invalid_structure_10.xlsx", package = "STAVE")
+  input_studies <- readxl::read_excel(file_path, sheet = "studies")
+  input_surveys <- readxl::read_excel(file_path, sheet = "surveys")
+  input_counts <- readxl::read_excel(file_path, sheet = "counts")
+  
+  # make object and load data
+  z <- STAVE_object$new()
+  expect_error(suppressMessages(z$append_data(studies_dataframe = input_studies,
+                                              surveys_dataframe = input_surveys,
+                                              counts_dataframe = input_counts)), NA)
   
 })
