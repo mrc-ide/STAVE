@@ -736,17 +736,29 @@ STAVE_object <- R6::R6Class(
                                 "with heterozygous calls", collapse = "")))
       }
       
+      
       # sum variants and determine if any where counts exceed the total_num
       total_num_check <- counts_dataframe |>
-        dplyr::mutate(variant_drop = drop_amino(counts_dataframe$variant_string)) |>
+        dplyr::mutate(row_number = dplyr::row_number(),
+                      variant_drop = drop_amino(counts_dataframe$variant_string)) |>
         dplyr::group_by(survey_key, variant_drop) |>
         dplyr::summarise(total_num_check = sum(variant_num),
-                         total_num = total_num[1], .groups = "drop") |>
-        dplyr::mutate(overcount = total_num_check > total_num) |>
-        dplyr::pull(overcount)
+                         total_num = total_num[1],
+                         row_number = row_number[1], .groups = "drop") |>
+        dplyr::mutate(overcount = total_num_check > total_num)
       
-      if (any(total_num_check)) {
-        stop("For a given survey and variant, the sum of variant_num cannot exceed the total_num")
+      if (any(total_num_check$overcount)) {
+        
+        # find problem rows
+        problem_rows <- total_num_check |>
+          dplyr::filter(overcount == TRUE) |>
+          dplyr::pull(row_number)
+        
+        message(paste("For a given survey and variant, the sum of variant_num cannot exceed the total_num",
+                      "\nProblem rows in the counts_dataframe:\n",
+                      paste(problem_rows, collapse = ", "), collapse = ""))
+        
+        stop()
       }
       
     },
