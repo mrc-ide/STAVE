@@ -160,18 +160,21 @@ STAVE_object <- R6::R6Class(
       target_variant_drop <- drop_amino(target_variant)
       
       # combine all three data.frames into one using IDs and keys
-      counts_ID <- dplyr::rename(private$counts, survey_ID = survey_key)
+      counts_ID <- dplyr::rename(private$counts, survey_ID = survey_key) |>
+        mutate(row_number = row_number())
       surveys_ID <- dplyr::rename(private$surveys, study_ID = study_key)
       df_combined <- private$studies |>
         dplyr::right_join(surveys_ID, by = "study_ID") |>
-        dplyr::right_join(counts_ID, by = "survey_ID")
+        dplyr::right_join(counts_ID, by = "survey_ID") |>
+        dplyr::arrange(row_number) |>
+        dplyr::select(-row_number)
       
       # get stripped variant from the data (minus amino acid) as we will need to
       # group by this variable. For example, crt_1:A would match with both
       # crt:1:A and crt:1:A/C, and numerator (but not denominator) needs to be
       # summed over both of these.
       df_combined <- df_combined |>
-        dplyr::mutate(variant_drop = drop_amino(counts_ID$variant_string, sort_gene_name = TRUE))
+        dplyr::mutate(variant_drop = drop_amino(variant_string, sort_gene_name = TRUE))
       
       # find if the target variant matches including the amino acid sequence
       # (for the numerator) and without the amino acid sequence (for the
@@ -191,8 +194,9 @@ STAVE_object <- R6::R6Class(
                                    collapse = " ")))
       }
       
-      # perform filtering, grouping, and first step aggregation of numerator
-      # (not yet summing variants at the same locus)
+      # perform filtering, grouping, and first step aggregation of numerator.
+      # This sums over values that match at the exact combination of loci.
+      # For example, crt:72:C and crt:72:C/A would be added together.
       # This version is for unambiguous calls only.
       df_numerator_unambiguous_stage1 <- df_combined |>
         dplyr::mutate(row_number = dplyr::row_number()) |>
@@ -203,8 +207,9 @@ STAVE_object <- R6::R6Class(
                          .groups = "drop") |>
         dplyr::ungroup()
       
-      # second stage numerator aggregation where we sum over variants at the
-      # same locus
+      # second stage numerator aggregation where we sum over different
+      # combinations of loci. For example, crt:72:C and crt:72_73:CV would be
+      # added together.
       df_numerator_unambiguous <- df_numerator_unambiguous_stage1 |>
         dplyr::group_by(study_ID, survey_ID) |>
         dplyr::summarise(numerator_min = sum(numerator_min),
@@ -215,7 +220,6 @@ STAVE_object <- R6::R6Class(
         dplyr::select(-row_number)
       
       # perform filtering, grouping, and first step aggregation of denominator
-      # (not yet summing variants at the same locus)
       df_denominator_stage1 <- df_combined |>
         dplyr::mutate(row_number = dplyr::row_number()) |>
         dplyr::filter(variant_drop_match == "Yes") |>
@@ -225,8 +229,7 @@ STAVE_object <- R6::R6Class(
                          .groups = "drop") |>
         dplyr::ungroup()
       
-      # second stage denominator aggregation where we sum over variants at the
-      # same locus
+      # second stage denominator aggregation
       df_denominator <- df_denominator_stage1 |>
         dplyr::group_by(study_ID, survey_ID) |>
         dplyr::summarise(denominator = sum(denominator),

@@ -25,10 +25,9 @@ test_that("examples of append failing on invalid data", {
     x2 <- readxl::read_xlsx(x_path, sheet = "surveys")
     x3 <- readxl::read_xlsx(x_path, sheet = "counts")
     
-    z$append_data(studies_dataframe = x1,
-                  surveys_dataframe = x2,
-                  counts_dataframe = x3) |>
-      expect_error()
+    expect_error(suppressMessages(z$append_data(studies_dataframe = x1,
+                                                surveys_dataframe = x2,
+                                                counts_dataframe = x3)))
     
   }
   
@@ -50,7 +49,7 @@ test_that("examples of append working when data contains many missing fields", {
   
 })
 
-test_that("further example of data that should pass", {
+test_that("further example 1 of data that should pass", {
   
   # read in correctly formatted data from inst/extdata
   file_path <- system.file("extdata", "structure_tests/invalid_structure_10.xlsx", package = "STAVE")
@@ -65,3 +64,4 @@ test_that("further example of data that should pass", {
                                               counts_dataframe = input_counts)), NA)
   
 })
+
