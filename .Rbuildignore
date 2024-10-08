@@ -4,3 +4,5 @@ ignore/
 R_ignore/
 LICENSE.md
 ^inst/extdata/.*/~\$
+^codecov\.yml$
+^\.github$

@@ -37,10 +37,10 @@ variants, while avoiding unnecessary duplication of information.
 \item \href{#method-STAVE_object-get_studies}{\code{STAVE_object$get_studies()}}
 \item \href{#method-STAVE_object-get_surveys}{\code{STAVE_object$get_surveys()}}
 \item \href{#method-STAVE_object-get_counts}{\code{STAVE_object$get_counts()}}
+\item \href{#method-STAVE_object-get_version}{\code{STAVE_object$get_version()}}
 \item \href{#method-STAVE_object-append_data}{\code{STAVE_object$append_data()}}
 \item \href{#method-STAVE_object-get_prevalence}{\code{STAVE_object$get_prevalence()}}
 \item \href{#method-STAVE_object-get_variants}{\code{STAVE_object$get_variants()}}
-\item \href{#method-STAVE_object-export_xlsx}{\code{STAVE_object$export_xlsx()}}
 \item \href{#method-STAVE_object-clone}{\code{STAVE_object$clone()}}
 }
 }
@@ -81,6 +81,21 @@ Extract the surveys data.frames stored within the object
 Extract the counts data.frames stored within the object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_counts()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-STAVE_object-get_version"></a>}}
+\if{latex}{\out{\hypertarget{method-STAVE_object-get_version}{}}}
+\subsection{Method \code{get_version()}}{
+Extract the version number of the STAVE object. This is important as
+member functions of a STAVE object are directly linked to the object
+itself, and will not be updated by updating the version of the package in
+your environment. To update a STAVE object to a new package version, you
+should first extract the data and then load into a new STAVE object
+created with the most recent version.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_version()}\if{html}{\out{</div>}}
 }
 
 }
@@ -162,7 +177,7 @@ numerators is used in the calculation.
 \if{html}{\out{<a id="method-STAVE_object-get_variants"></a>}}
 \if{latex}{\out{\hypertarget{method-STAVE_object-get_variants}{}}}
 \subsection{Method \code{get_variants()}}{
-Return a table of all variants present in the data object.
+Return a vector of all variants present in the data object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_variants(report_haplo = FALSE)}\if{html}{\out{</div>}}
 }
@@ -172,23 +187,6 @@ Return a table of all variants present in the data object.
 \describe{
 \item{\code{report_haplo}}{(Boolean) if TRUE then list all haplotypes.
 Otherwise, list in locus-by-locus format. Defaults to FALSE.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-STAVE_object-export_xlsx"></a>}}
-\if{latex}{\out{\hypertarget{method-STAVE_object-export_xlsx}{}}}
-\subsection{Method \code{export_xlsx()}}{
-Export full data object as an Excel spreadsheet (.xlsx format).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$export_xlsx(file_path)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{file_path}}{the full path and name of the output file.}
 }
 \if{html}{\out{</div>}}
 }
