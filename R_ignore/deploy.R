@@ -26,13 +26,10 @@ s
 p <- s$get_prevalence("mdr1:184:F")
 p
 
+# get list of variant loci
 s$get_variants()
 
-
-v <- s$get_counts()$variant_string
-
-v_split <- strsplit(v, split = ";") |>
-  unlist()
-
-
-v_split
+# drop a study
+d <- s$get_studies()$study_ID
+s$drop_study(drop_study_ID = d[1:5])
+s

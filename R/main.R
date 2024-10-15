@@ -360,7 +360,7 @@ STAVE_object <- R6::R6Class(
       # parse by locus position
       v_l <- list()
       for (i in seq_along(v_split)) {
-        l <- variant_to_list(v_split[1])
+        l <- variant_to_list(v_split[i])
         v_l[[i]] <- sprintf("%s:%s:%s", names(l)[1], l[[1]]$pos, l[[1]]$amino)
       }
       
@@ -370,6 +370,34 @@ STAVE_object <- R6::R6Class(
         sort()
       
       return(ret)
+    },
+    
+    # -----------------------------------
+    #' @description
+    #' Drop one or more study_IDs from the data. This will drop from all
+    #' internally stored data objects, including the corresponding surveys and
+    #' counts data.
+    #' @param drop_study_ID a vector of study_IDs to drop from all data objects.
+    drop_study = function(drop_study_ID) {
+      
+      # check that study is a valid ID
+      df_studies <- self$get_studies()
+      if (!all(drop_study_ID %in% df_studies$study_ID)) {
+        stop("all values in drop_study_ID must be present in the loaded data")
+      }
+      
+      # get corresponding survey IDs
+      drop_survey_ID <- self$get_surveys() |>
+        dplyr::filter(study_key %in% drop_study_ID) |>
+        dplyr::pull(survey_ID)
+      
+      # drop IDs and save back into private object
+      private$studies <- self$get_studies() |>
+        dplyr::filter(!(study_ID %in% drop_study_ID))
+      private$surveys <- self$get_surveys() |>
+        dplyr::filter(!(survey_ID %in% drop_survey_ID))
+      private$counts <- self$get_counts() |>
+        dplyr::filter(!(survey_key %in% drop_survey_ID))
     }
     
   ),
