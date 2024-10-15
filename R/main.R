@@ -75,6 +75,18 @@ STAVE_object <- R6::R6Class(
     
     # -----------------------------------
     #' @description
+    #' Extract the version number of the STAVE object. This is important as
+    #' member functions of a STAVE object are directly linked to the object
+    #' itself, and will not be updated by updating the version of the package in
+    #' your environment. To update a STAVE object to a new package version, you
+    #' should first extract the data and then load into a new STAVE object
+    #' created with the most recent version.
+    get_version = function() {
+      return(private$version)
+    },
+    
+    # -----------------------------------
+    #' @description
     #' Append new data
     #' @param studies_dataframe a data.frame containing information at the study
     #'   level. This data.frame must have the following columns: study_ID,
@@ -325,19 +337,39 @@ STAVE_object <- R6::R6Class(
     
     # -----------------------------------
     #' @description
-    #' Return a table of all variants present in the data object.
+    #' Return a vector of all variants present in the data object.
     #' @param report_haplo (Boolean) if TRUE then list all haplotypes.
     #'   Otherwise, list in locus-by-locus format. Defaults to FALSE.
     get_variants = function(report_haplo = FALSE) {
-      cat("TODO - return table of variants")
-    },
-    
-    # -----------------------------------
-    #' @description
-    #' Export full data object as an Excel spreadsheet (.xlsx format).
-    #' @param file_path the full path and name of the output file.
-    export_xlsx = function(file_path) {
-      cat("TODO - export to xlsx")
+      
+      v <- self$get_counts()$variant_string
+      if (is.null(v)) {
+        stop("No data loaded")
+      }
+      
+      # simply option to return all unique haplos
+      if (report_haplo) {
+        ret <- sort(unique(v))
+        return(ret)
+      }
+      
+      # split into genes
+      v_split <- strsplit(v, split = ";") |>
+        unlist()
+      
+      # parse by locus position
+      v_l <- list()
+      for (i in seq_along(v_split)) {
+        l <- variant_to_list(v_split[1])
+        v_l[[i]] <- sprintf("%s:%s:%s", names(l)[1], l[[1]]$pos, l[[1]]$amino)
+      }
+      
+      # make final return object
+      ret <- unlist(v_l) |>
+        unique() |>
+        sort()
+      
+      return(ret)
     }
     
   ),
@@ -350,6 +382,7 @@ STAVE_object <- R6::R6Class(
     studies = NULL,
     surveys = NULL,
     counts = NULL,
+    version = packageVersion("STAVE"),
     
     # -----------------------------------
     # check basic formatting (variables types etc) of studies data.frame
@@ -360,6 +393,7 @@ STAVE_object <- R6::R6Class(
       # - has exactly the right number of columns and correctly named
       # - variables have the correct type and range
       # - check that character string variables are valid
+      # - warning if any private type studies
       
       assert_dataframe(studies_dataframe)
       assert_ncol(studies_dataframe, 6)
@@ -369,7 +403,10 @@ STAVE_object <- R6::R6Class(
       if (!all(is.na(studies_dataframe$study_name))) {
         assert_string(studies_dataframe$study_name)
       }
-      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "other"))
+      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "other", "private"))
+      if (any(studies_dataframe$study_type == "private")) {
+        warning("Some appended data are labelled as private")
+      }
       if (!all(is.na(studies_dataframe$authors))) {
         assert_string(studies_dataframe$authors)
       }
