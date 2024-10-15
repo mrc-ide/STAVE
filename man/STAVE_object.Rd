@@ -41,6 +41,7 @@ variants, while avoiding unnecessary duplication of information.
 \item \href{#method-STAVE_object-append_data}{\code{STAVE_object$append_data()}}
 \item \href{#method-STAVE_object-get_prevalence}{\code{STAVE_object$get_prevalence()}}
 \item \href{#method-STAVE_object-get_variants}{\code{STAVE_object$get_variants()}}
+\item \href{#method-STAVE_object-drop_study}{\code{STAVE_object$drop_study()}}
 \item \href{#method-STAVE_object-clone}{\code{STAVE_object$clone()}}
 }
 }
@@ -187,6 +188,25 @@ Return a vector of all variants present in the data object.
 \describe{
 \item{\code{report_haplo}}{(Boolean) if TRUE then list all haplotypes.
 Otherwise, list in locus-by-locus format. Defaults to FALSE.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-STAVE_object-drop_study"></a>}}
+\if{latex}{\out{\hypertarget{method-STAVE_object-drop_study}{}}}
+\subsection{Method \code{drop_study()}}{
+Drop one or more study_IDs from the data. This will drop from all
+internally stored data objects, including the corresponding surveys and
+counts data.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$drop_study(drop_study_ID)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{drop_study_ID}}{a vector of study_IDs to drop from all data objects.}
 }
 \if{html}{\out{</div>}}
 }
