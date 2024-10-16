@@ -1,12 +1,16 @@
 Package: STAVE
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.3.0
+Title: Spatial-Temporal Aggregated Variant Encoding
+Version: 1.0.0
 Authors@R: c(
     person("Bob", "Verity", email = "r.verity@imperial.ac.uk", role = c("aut", "cre"))
     )
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: STAVE is an R package for storing spatial-temporal genetic data. Data are stored
+    at the aggregate level (numerator and denominator) rather than at the individual
+    level. STAVE centres around one main class; data are read into this class, and
+    all data manipulation (e.g. calculating prevalence) takes place using member
+    functions. Although STAVE is designed with *Plasmodium* genetic data in mind, in
+    theory could be used to store genetic information from other organisms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
