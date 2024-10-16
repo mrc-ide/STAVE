@@ -23,7 +23,7 @@ STAVE is an R package for storing spatial-temporal genetic data. Data are stored
 at the aggregate level (numerator and denominator) rather than at the individual
 level. STAVE centres around one main class; data are read into this class, and
 all data manipulation (e.g. calculating prevalence) takes place using member
-functions. Although STAVE is designed with *Plasmodium* parasites in mind, in
+functions. Although STAVE is designed with *Plasmodium* genetic data in mind, in
 theory could be used to store genetic information from other organisms.
 
 ## Why do we need this?
