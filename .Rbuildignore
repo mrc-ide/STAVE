@@ -6,3 +6,4 @@ LICENSE.md
 ^inst/extdata/.*/~\$
 ^codecov\.yml$
 ^\.github$
+^README\.Rmd$
