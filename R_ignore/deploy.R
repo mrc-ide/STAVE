@@ -10,6 +10,10 @@
 # Purpose:
 # Example deploy script for STAVE package.
 #
+# Useful commands:
+# pkgdown::build_site() # build all pages of pkgdown website
+# pkgdown::build_article('my-article')  # build single vignette
+
 # ------------------------------------------------------------------
 
 # create new object

@@ -1,0 +1,21 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: simplex
+
+navbar:
+  title: "malariasimulation"
+  structure:
+    left: [Format, Installation, Tutorials, Functions]
+    right: [icon]
+  components:
+    vignettes:
+      text: "Installation"
+      menu:
+        href: articles/installation.html
+    functions:
+      text: "Functions"
+      href: reference/index.html
+    icon:
+      icon: fa-github
+      href: https://github.com/mrc-ide/stave

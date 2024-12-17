@@ -7,3 +7,7 @@ LICENSE.md
 ^codecov\.yml$
 ^\.github$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^index.md$
