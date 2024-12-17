@@ -1,0 +1,36 @@
+---
+title: "Installation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(STAVE)
+```
+
+## Installation
+
+You can install the most recent version of STAVE using:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("mrc-ide/STAVE")
+```
+
+It is good practice to specify a version number in your own scripts to ensure future users have exactly the same version loaded. To install a specific version you can use this format:
+
+``` r
+devtools::install_github("mrc-ide/STAVE@v1.0.0")
+```
+
+see [here](https://github.com/mrc-ide/STAVE) for the latest version number.
