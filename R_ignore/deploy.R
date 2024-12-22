@@ -16,6 +16,15 @@
 
 # ------------------------------------------------------------------
 
+# assert_leq(counts_dataframe$variant_num, counts_dataframe$total_num, message = "variant_num cannot exceed total_num")
+
+# load("data/example_input.rda")
+# names(example_input$studies)[1] <- "study_id"
+# names(example_input$surveys)[2] <- "survey_id"
+# names(example_input$surveys)[5] <- "latitude"
+# names(example_input$surveys)[6] <- "longitude"
+# save(example_input, file = "data/example_input.rda")
+
 # create new object
 s <- STAVE_object$new()
 s

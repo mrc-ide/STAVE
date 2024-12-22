@@ -14,7 +14,7 @@ package is through this class in the form of member functions."><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,29 @@ package is through this class in the form of member functions."><!-- mathjax -->
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"></ul><form class="form-inline my-2 my-lg-0" role="search">
+      <ul class="navbar-nav me-auto"><li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
+    <a class="dropdown-item" href="../articles/relational_structure.html">The relational data structure</a>
+    <a class="dropdown-item" href="../articles/input_formats.html">Input data formats</a>
+    <a class="dropdown-item" href="../articles/variant_strings.html">Encoding variants as strings</a>
+    <a class="dropdown-item" href="../articles/calculating_prevalence.html">Calculating prevalence</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/installation.html">Installation</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+    <a class="dropdown-item" href="../TODO">Reading in data</a>
+    <a class="dropdown-item" href="../TODO">Calculating prevalence and other outputs</a>
+  </div>
+</li>
+<li class="active nav-item">
+  <a class="nav-link" href="../reference/index.html">Functions</a>
+</li>
+      </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
@@ -56,14 +78,14 @@ package is through this class in the form of member functions.</p>
 cannot (or should not) be edited directly. Rather, tables can be extracted
 using <code>get_counts()</code> and similarly for other tables. The three tables
 are:</p><ol><li><p>studies: Information on where the data came from, for example a url
-    and author names. Each study is indexed with a unique study_ID.</p></li>
+    and author names. Each study is indexed with a unique study_id.</p></li>
 <li><p>surveys: Information on the surveys represented within a study. A
     survey is defined here as a discrete instance of data collection, which
     includes information on geography (latitude and longitude) and collection
-    time. Surveys are given survey_IDs and are linked to a particular study
-    through the study_ID.</p></li>
+    time. Surveys are given survey_ids and are linked to a particular study
+    through the study_id.</p></li>
 <li><p>counts: The actual genetic information, which is linked to a
-    particular survey through the survey_ID. Genetic variants are encoded in
+    particular survey through the survey_id. Genetic variants are encoded in
     character strings that must follow a specified format, and the number of
     times this variant was observed among the total sample is stored in
     columns.</p></li>
@@ -146,22 +168,22 @@ created with the most recent version.</p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>studies_dataframe</code></dt>
 <dd><p>a data.frame containing information at the study
-level. This data.frame must have the following columns: study_ID,
+level. This data.frame must have the following columns: study_id,
 study_name, study_type, authors, publication_year, url</p></dd>
 
 
 <dt><code>surveys_dataframe</code></dt>
 <dd><p>a data.frame containing information at the
 survey level. This data.frame must have the following columns:
-study_key, survey_ID, country_name, site_name, lat, lon, spatial_notes,
+study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
 collection_start, collection_end, time_notes. The study_key element
-must correspond to a study_ID in the studies_dataframe.</p></dd>
+must correspond to a study_id in the studies_dataframe.</p></dd>
 
 
 <dt><code>counts_dataframe</code></dt>
 <dd><p>a data.frame of genetic information. Must contain
 the following columns: survey_key, variant_string, variant_num,
-total_num. The survey_key element must correspond to a valid survey_ID
+total_num. The survey_key element must correspond to a valid survey_id
 in the surveys_dataframe.</p></dd>
 
 
@@ -229,17 +251,17 @@ Otherwise, list in locus-by-locus format. Defaults to FALSE.</p></dd>
 
 </div><p></p><hr><a id="method-STAVE_object-drop_study"></a><div class="section">
 <h3 id="method-drop-study-">Method <code>drop_study()</code><a class="anchor" aria-label="anchor" href="#method-drop-study-"></a></h3>
-<p>Drop one or more study_IDs from the data. This will drop from all
+<p>Drop one or more study_ids from the data. This will drop from all
 internally stored data objects, including the corresponding surveys and
 counts data.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">STAVE_object</span><span class="op">$</span><span class="fu">drop_study</span><span class="op">(</span><span class="va">drop_study_ID</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">STAVE_object</span><span class="op">$</span><span class="fu">drop_study</span><span class="op">(</span><span class="va">drop_study_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>drop_study_ID</code></dt>
-<dd><p>a vector of study_IDs to drop from all data objects.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>drop_study_id</code></dt>
+<dd><p>a vector of study_ids to drop from all data objects.</p></dd>
 
 
 </dl><p></p></div>

@@ -15,14 +15,14 @@ using \code{get_counts()} and similarly for other tables. The three tables
 are:
   \enumerate{
     \item studies: Information on where the data came from, for example a url
-    and author names. Each study is indexed with a unique study_ID.
+    and author names. Each study is indexed with a unique study_id.
     \item surveys: Information on the surveys represented within a study. A
     survey is defined here as a discrete instance of data collection, which
     includes information on geography (latitude and longitude) and collection
-    time. Surveys are given survey_IDs and are linked to a particular study
-    through the study_ID.
+    time. Surveys are given survey_ids and are linked to a particular study
+    through the study_id.
     \item counts: The actual genetic information, which is linked to a
-    particular survey through the survey_ID. Genetic variants are encoded in
+    particular survey through the survey_id. Genetic variants are encoded in
     character strings that must follow a specified format, and the number of
     times this variant was observed among the total sample is stored in
     columns.
@@ -117,18 +117,18 @@ Append new data
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{studies_dataframe}}{a data.frame containing information at the study
-level. This data.frame must have the following columns: study_ID,
+level. This data.frame must have the following columns: study_id,
 study_name, study_type, authors, publication_year, url}
 
 \item{\code{surveys_dataframe}}{a data.frame containing information at the
 survey level. This data.frame must have the following columns:
-study_key, survey_ID, country_name, site_name, lat, lon, spatial_notes,
+study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
 collection_start, collection_end, time_notes. The study_key element
-must correspond to a study_ID in the studies_dataframe.}
+must correspond to a study_id in the studies_dataframe.}
 
 \item{\code{counts_dataframe}}{a data.frame of genetic information. Must contain
 the following columns: survey_key, variant_string, variant_num,
-total_num. The survey_key element must correspond to a valid survey_ID
+total_num. The survey_key element must correspond to a valid survey_id
 in the surveys_dataframe.}
 }
 \if{html}{\out{</div>}}
@@ -196,17 +196,17 @@ Otherwise, list in locus-by-locus format. Defaults to FALSE.}
 \if{html}{\out{<a id="method-STAVE_object-drop_study"></a>}}
 \if{latex}{\out{\hypertarget{method-STAVE_object-drop_study}{}}}
 \subsection{Method \code{drop_study()}}{
-Drop one or more study_IDs from the data. This will drop from all
+Drop one or more study_ids from the data. This will drop from all
 internally stored data objects, including the corresponding surveys and
 counts data.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$drop_study(drop_study_ID)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$drop_study(drop_study_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{drop_study_ID}}{a vector of study_IDs to drop from all data objects.}
+\item{\code{drop_study_id}}{a vector of study_ids to drop from all data objects.}
 }
 \if{html}{\out{</div>}}
 }

@@ -14,14 +14,14 @@
 #' are:
 #'   \enumerate{
 #'     \item studies: Information on where the data came from, for example a url
-#'     and author names. Each study is indexed with a unique study_ID.
+#'     and author names. Each study is indexed with a unique study_id.
 #'     \item surveys: Information on the surveys represented within a study. A
 #'     survey is defined here as a discrete instance of data collection, which
 #'     includes information on geography (latitude and longitude) and collection
-#'     time. Surveys are given survey_IDs and are linked to a particular study
-#'     through the study_ID.
+#'     time. Surveys are given survey_ids and are linked to a particular study
+#'     through the study_id.
 #'     \item counts: The actual genetic information, which is linked to a
-#'     particular survey through the survey_ID. Genetic variants are encoded in
+#'     particular survey through the survey_id. Genetic variants are encoded in
 #'     character strings that must follow a specified format, and the number of
 #'     times this variant was observed among the total sample is stored in
 #'     columns.
@@ -47,7 +47,7 @@ STAVE_object <- R6::R6Class(
         cat("No data loaded")
       } else {
         cat(sprintf("Studies: %s", nrow(private$studies)))
-        n_surveys <- length(unique(private$surveys$survey_ID))
+        n_surveys <- length(unique(private$surveys$survey_id))
         cat(sprintf("\nSurveys: %s", n_surveys))
       }
     },
@@ -89,16 +89,16 @@ STAVE_object <- R6::R6Class(
     #' @description
     #' Append new data
     #' @param studies_dataframe a data.frame containing information at the study
-    #'   level. This data.frame must have the following columns: study_ID,
+    #'   level. This data.frame must have the following columns: study_id,
     #'   study_name, study_type, authors, publication_year, url
     #' @param surveys_dataframe a data.frame containing information at the
     #'   survey level. This data.frame must have the following columns:
-    #'   study_key, survey_ID, country_name, site_name, lat, lon, spatial_notes,
+    #'   study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
     #'   collection_start, collection_end, time_notes. The study_key element
-    #'   must correspond to a study_ID in the studies_dataframe.
+    #'   must correspond to a study_id in the studies_dataframe.
     #' @param counts_dataframe a data.frame of genetic information. Must contain
     #'   the following columns: survey_key, variant_string, variant_num,
-    #'   total_num. The survey_key element must correspond to a valid survey_ID
+    #'   total_num. The survey_key element must correspond to a valid survey_id
     #'   in the surveys_dataframe.
     append_data = function(studies_dataframe, surveys_dataframe, counts_dataframe) {
       
@@ -107,10 +107,9 @@ STAVE_object <- R6::R6Class(
       private$check_format_studies(studies_dataframe)
       private$check_format_surveys(surveys_dataframe)
       private$check_format_counts(counts_dataframe)
-      private$check_variant_string(counts_dataframe$variant_string)
       
       # structural checks on data. These are more focused on the relationships
-      # between data, for example ensuring no duplicate study_IDs, or ensuring
+      # between data, for example ensuring no duplicate study_ids, or ensuring
       # that the same variant codons are not encoded multiple times within a
       # single survey
       private$check_structure(studies_dataframe, surveys_dataframe, counts_dataframe)
@@ -172,12 +171,12 @@ STAVE_object <- R6::R6Class(
       target_variant_drop <- drop_amino(target_variant)
       
       # combine all three data.frames into one using IDs and keys
-      counts_ID <- dplyr::rename(private$counts, survey_ID = survey_key) |>
+      counts_ID <- dplyr::rename(private$counts, survey_id = survey_key) |>
         mutate(row_number = row_number())
-      surveys_ID <- dplyr::rename(private$surveys, study_ID = study_key)
+      surveys_ID <- dplyr::rename(private$surveys, study_id = study_key)
       df_combined <- private$studies |>
-        dplyr::right_join(surveys_ID, by = "study_ID") |>
-        dplyr::right_join(counts_ID, by = "survey_ID") |>
+        dplyr::right_join(surveys_ID, by = "study_id") |>
+        dplyr::right_join(counts_ID, by = "survey_id") |>
         dplyr::arrange(row_number) |>
         dplyr::select(-row_number)
       
@@ -213,7 +212,7 @@ STAVE_object <- R6::R6Class(
       df_numerator_unambiguous_stage1 <- df_combined |>
         dplyr::mutate(row_number = dplyr::row_number()) |>
         dplyr::filter(variant_match == "Yes") |>
-        dplyr::group_by(study_ID, survey_ID, variant_drop) |>
+        dplyr::group_by(study_id, survey_id, variant_drop) |>
         dplyr::summarise(numerator_min = sum(variant_num),
                          row_number = row_number[1],
                          .groups = "drop") |>
@@ -223,7 +222,7 @@ STAVE_object <- R6::R6Class(
       # combinations of loci. For example, crt:72:C and crt:72_73:CV would be
       # added together.
       df_numerator_unambiguous <- df_numerator_unambiguous_stage1 |>
-        dplyr::group_by(study_ID, survey_ID) |>
+        dplyr::group_by(study_id, survey_id) |>
         dplyr::summarise(numerator_min = sum(numerator_min),
                          row_number = row_number[1],
                          .groups = "drop") |>
@@ -235,7 +234,7 @@ STAVE_object <- R6::R6Class(
       df_denominator_stage1 <- df_combined |>
         dplyr::mutate(row_number = dplyr::row_number()) |>
         dplyr::filter(variant_drop_match == "Yes") |>
-        dplyr::group_by(study_ID, survey_ID, variant_drop) |>
+        dplyr::group_by(study_id, survey_id, variant_drop) |>
         dplyr::summarise(denominator = total_num[1],
                          row_number = row_number[1],
                          .groups = "drop") |>
@@ -243,7 +242,7 @@ STAVE_object <- R6::R6Class(
       
       # second stage denominator aggregation
       df_denominator <- df_denominator_stage1 |>
-        dplyr::group_by(study_ID, survey_ID) |>
+        dplyr::group_by(study_id, survey_id) |>
         dplyr::summarise(denominator = sum(denominator),
                          row_number = row_number[1],
                          .groups = "drop") |>
@@ -262,7 +261,7 @@ STAVE_object <- R6::R6Class(
         df_numerator_ambiguous_stage1 <- df_combined |>
           dplyr::mutate(row_number = dplyr::row_number()) |>
           dplyr::filter(variant_match  %in% c("Yes", "Ambiguous")) |>
-          dplyr::group_by(study_ID, survey_ID, variant_drop) |>
+          dplyr::group_by(study_id, survey_id, variant_drop) |>
           dplyr::summarise(numerator_max = sum(variant_num),
                            row_number = row_number[1],
                            .groups = "drop") |>
@@ -271,7 +270,7 @@ STAVE_object <- R6::R6Class(
         # second stage numerator aggregation where we sum over variants at the
         # same locus
         df_numerator_ambiguous <- df_numerator_ambiguous_stage1 |>
-          dplyr::group_by(study_ID, survey_ID) |>
+          dplyr::group_by(study_id, survey_id) |>
           dplyr::summarise(numerator_max = sum(numerator_max),
                            row_number = row_number[1],
                            .groups = "drop") |>
@@ -281,12 +280,12 @@ STAVE_object <- R6::R6Class(
         
         # merge with unambiguous
         df_numerator <- df_numerator |>
-          dplyr::left_join(df_numerator_ambiguous, by = dplyr::join_by(study_ID, survey_ID))
+          dplyr::left_join(df_numerator_ambiguous, by = dplyr::join_by(study_id, survey_id))
       }
       
       # merge numerator with denominator
       df_prev <- df_numerator |>
-        dplyr::left_join(df_denominator, by = dplyr::join_by(study_ID, survey_ID))
+        dplyr::left_join(df_denominator, by = dplyr::join_by(study_id, survey_id))
       
       # calculate prevalence point estimate and 95% exact binomial confidence
       # intervals
@@ -320,8 +319,8 @@ STAVE_object <- R6::R6Class(
       
       # merge back with all study and survey info
       ret <- private$studies |>
-        dplyr::right_join(surveys_ID, by = "study_ID") |>
-        dplyr::left_join(df_prev, by = dplyr::join_by(study_ID, survey_ID))
+        dplyr::right_join(surveys_ID, by = "study_id") |>
+        dplyr::left_join(df_prev, by = dplyr::join_by(study_id, survey_id))
       
       # replace some NAs with zeros
       if (keep_ambiguous) {
@@ -374,30 +373,30 @@ STAVE_object <- R6::R6Class(
     
     # -----------------------------------
     #' @description
-    #' Drop one or more study_IDs from the data. This will drop from all
+    #' Drop one or more study_ids from the data. This will drop from all
     #' internally stored data objects, including the corresponding surveys and
     #' counts data.
-    #' @param drop_study_ID a vector of study_IDs to drop from all data objects.
-    drop_study = function(drop_study_ID) {
+    #' @param drop_study_id a vector of study_ids to drop from all data objects.
+    drop_study = function(drop_study_id) {
       
       # check that study is a valid ID
       df_studies <- self$get_studies()
-      if (!all(drop_study_ID %in% df_studies$study_ID)) {
-        stop("all values in drop_study_ID must be present in the loaded data")
+      if (!all(drop_study_id %in% df_studies$study_id)) {
+        stop("all values in drop_study_id must be present in the loaded data")
       }
       
       # get corresponding survey IDs
-      drop_survey_ID <- self$get_surveys() |>
-        dplyr::filter(study_key %in% drop_study_ID) |>
-        dplyr::pull(survey_ID)
+      drop_survey_id <- self$get_surveys() |>
+        dplyr::filter(study_key %in% drop_study_id) |>
+        dplyr::pull(survey_id)
       
       # drop IDs and save back into private object
       private$studies <- self$get_studies() |>
-        dplyr::filter(!(study_ID %in% drop_study_ID))
+        dplyr::filter(!(study_id %in% drop_study_id))
       private$surveys <- self$get_surveys() |>
-        dplyr::filter(!(survey_ID %in% drop_survey_ID))
+        dplyr::filter(!(survey_id %in% drop_survey_id))
       private$counts <- self$get_counts() |>
-        dplyr::filter(!(survey_key %in% drop_survey_ID))
+        dplyr::filter(!(survey_key %in% drop_survey_id))
     }
     
   ),
@@ -417,30 +416,46 @@ STAVE_object <- R6::R6Class(
     check_format_studies = function(studies_dataframe) {
       
       # CHECKS
-      # - is data.frame
-      # - has exactly the right number of columns and correctly named
-      # - variables have the correct type and range
-      # - check that character string variables are valid
-      # - warning if any private type studies
+      # - must be data.frame with exactly the right number of columns and correctly named
+      # - variables have the correct type and range. Allow for missing data in some cases
+      # - IDs are valid identifiers
+      # - throw warning if any studies have study_type of 'private'
       
+      # basic structure
       assert_dataframe(studies_dataframe)
       assert_ncol(studies_dataframe, 6)
-      assert_eq(names(studies_dataframe), c("study_ID", "study_name", "study_type", "authors", "publication_year", "url"))
-      assert_string(studies_dataframe$study_ID)
-      assert_valid_string(studies_dataframe$study_ID, message_name = "study_ID in studies_dataframe")
-      if (!all(is.na(studies_dataframe$study_name))) {
-        assert_string(studies_dataframe$study_name)
+      assert_eq(names(studies_dataframe), c("study_id", "study_name", "study_type", "authors", "publication_year", "url"))
+      
+      # study_id
+      assert_non_NA(studies_dataframe$study_id)
+      assert_valid_string(studies_dataframe$study_id, message_name = "study_id in studies_dataframe")
+      
+      # study_name
+      w <- which(!is.na(studies_dataframe$study_name))
+      if (any(w)) {
+        assert_string(studies_dataframe$study_name[w])
       }
-      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "other", "private"))
+      
+      # study_type
+      assert_in(studies_dataframe$study_type, c("peer_reviewed", "preprint", "private", "other"))
       if (any(studies_dataframe$study_type == "private")) {
-        warning("Some appended data are labelled as private")
+        warning("Some appended data are labelled as private. Be sure to remove these before making this data object public.")
       }
-      if (!all(is.na(studies_dataframe$authors))) {
-        assert_string(studies_dataframe$authors)
+      
+      # authors
+      w <- which(!is.na(studies_dataframe$authors))
+      if (any(w)) {
+        assert_string(studies_dataframe$authors[w])
       }
-      if (!all(is.na(studies_dataframe$publication_year))) {
-        assert_pos_int(studies_dataframe$publication_year, zero_allowed = FALSE)
+      
+      # publication_year
+      w <- which(!is.na(studies_dataframe$publication_year))
+      if (any(w)) {
+        assert_pos_int(studies_dataframe$publication_year[w], zero_allowed = FALSE)
       }
+      
+      # url
+      assert_non_NA(studies_dataframe$url)
       assert_string(studies_dataframe$url)
     },
     
@@ -449,43 +464,72 @@ STAVE_object <- R6::R6Class(
     check_format_surveys = function(surveys_dataframe) {
       
       # CHECKS
-      # - is data.frame
-      # - has exactly the right number of columns and correctly named
+      # - must be data.frame with exactly the right number of columns and correctly named
       # - variables have the correct type and range. Allow for missing data in some cases
-      # - check that character string variables are valid
-      # - country_name is within the valid list of names
-      # - collection_start must be before collection_end
-      # - collection_day is between collection_start and collection_end
+      # - IDs are valid identifiers
+      # - collection days are valid date strings
       
+      # basic structure
       assert_dataframe(surveys_dataframe)
       assert_ncol(surveys_dataframe, 11)
-      assert_eq(names(surveys_dataframe), c("study_key", "survey_ID", "country_name", "site_name", "lat", "lon", "spatial_notes",
-                                            "collection_start", "collection_end", "collection_day", "time_notes"))
-      assert_string(surveys_dataframe$survey_ID)
-      assert_valid_string(surveys_dataframe$survey_ID, message_name = "survey_ID in surveys_dataframe")
-      assert_string(surveys_dataframe$study_key)
+      assert_eq(names(surveys_dataframe), c("study_key", "survey_id", "country_name", "site_name", "latitude",
+                                            "longitude", "spatial_notes", "collection_start", "collection_end",
+                                            "collection_day", "time_notes"))
+      
+      # study_key
+      assert_non_NA(surveys_dataframe$study_key)
       assert_valid_string(surveys_dataframe$study_key, message_name = "study_key in surveys_dataframe")
       
-      if (!all(is.na(surveys_dataframe$country_name))) {
-        assert_string(surveys_dataframe$country_name)
+      # survey_id
+      assert_non_NA(surveys_dataframe$survey_id)
+      assert_valid_string(surveys_dataframe$survey_id, message_name = "survey_id in surveys_dataframe")
+      
+      # country_name
+      w <- which(!is.na(surveys_dataframe$country_name))
+      if (any(w)) {
+        assert_string(surveys_dataframe$country_name[w])
       }
-      if (!all(is.na(surveys_dataframe$site_name))) {
-        assert_string(surveys_dataframe$site_name)
+      
+      # site name
+      w <- which(!is.na(surveys_dataframe$site_name))
+      if (any(w)) {
+        assert_string(surveys_dataframe$site_name[w])
       }
-      assert_bounded(surveys_dataframe$lat, left = -180, right = 180)
-      assert_bounded(surveys_dataframe$lon, left = -180, right = 180)
-      if (!all(is.na(surveys_dataframe$spatial_notes))) {
-        assert_string(surveys_dataframe$spatial_notes)
+      
+      # latitude
+      assert_non_NA(surveys_dataframe$latitude)
+      assert_bounded(surveys_dataframe$latitude, left = -180, right = 180)
+      
+      # longitude
+      assert_non_NA(surveys_dataframe$longitude)
+      assert_bounded(surveys_dataframe$longitude, left = -180, right = 180)
+      
+      # spatial_notes
+      w <- which(!is.na(surveys_dataframe$spatial_notes))
+      if (any(w)) {
+        assert_string(surveys_dataframe$spatial_notes[w])
       }
-      if (!all(is.na(surveys_dataframe$collection_start))) {
-        assert_string(surveys_dataframe$collection_start)
+      
+      # collection_start
+      w <- which(!is.na(surveys_dataframe$collection_start))
+      if (any(w)) {
+        assert_valid_ymd(surveys_dataframe$collection_start[w])
       }
-      if (!all(is.na(surveys_dataframe$collection_end))) {
-        assert_string(surveys_dataframe$collection_end)
+      
+      # collection_end
+      w <- which(!is.na(surveys_dataframe$collection_end))
+      if (any(w)) {
+        assert_valid_ymd(surveys_dataframe$collection_end[w])
       }
+      
+      # collection_day
+      assert_non_NA(surveys_dataframe$collection_day)
       assert_valid_ymd(surveys_dataframe$collection_day)
-      if (!all(is.na(surveys_dataframe$time_notes))) {
-        assert_string(surveys_dataframe$time_notes)
+      
+      # time_notes
+      w <- which(!is.na(surveys_dataframe$time_notes))
+      if (any(w)) {
+        assert_string(surveys_dataframe$time_notes[w])
       }
     },
     
@@ -494,23 +538,31 @@ STAVE_object <- R6::R6Class(
     check_format_counts = function(counts_dataframe) {
       
       # CHECKS
-      # - is data.frame
-      # - has exactly the right number of columns and correctly named
+      # - must be data.frame with exactly the right number of columns and correctly named
       # - variables have the correct type and range. Allow for missing data in some cases
-      # - check that character string variables are valid. Note that a more thorough series of
-      #   checks on the variant_string format will occur separately through the
-      #   check_variant_string() function
-      # - variant_num cannot exceed total_num
+      # - IDs are valid identifiers
+      # - check that variant_string through the detailed check_variant_string() function
       
+      # basic structure
       assert_dataframe(counts_dataframe)
       assert_ncol(counts_dataframe, 4)
       assert_eq(names(counts_dataframe), c("survey_key", "variant_string", "variant_num", "total_num"))
-      assert_string(counts_dataframe$survey_key)
+      
+      # survey_key
+      assert_non_NA(counts_dataframe$survey_key)
       assert_valid_string(counts_dataframe$survey_key, message_name = "survey_key in counts_dataframe")
-      assert_string(counts_dataframe$variant_string)
+      
+      # variant_string
+      assert_non_NA(counts_dataframe$variant_string)
+      private$check_variant_string(counts_dataframe$variant_string)
+      
+      # variant_num
+      assert_non_NA(counts_dataframe$variant_num)
       assert_pos_int(counts_dataframe$variant_num, zero_allowed = TRUE)
+      
+      # total_num
+      assert_non_NA(counts_dataframe$total_num)
       assert_pos_int(counts_dataframe$total_num, zero_allowed = FALSE)
-      assert_leq(counts_dataframe$variant_num, counts_dataframe$total_num, message = "variant_num cannot exceed total_num")
       
     },
     
@@ -729,53 +781,54 @@ STAVE_object <- R6::R6Class(
       
       # CHECKS
       # studies_dataframe:
-      # - new study_IDs are unique
-      # - new study_IDs are not already present in old study_IDs
-      # - new study_IDs are referenced at least once in new study_keys
+      # - study_ids are unique
+      # - study_ids are not already present in old study_ids
+      # - study_ids are referenced at least once in study_keys
       
       # surveys_dataframe:
-      # - new survey_IDs are unique within each study
-      # - new study_keys map to real new study_IDs
-      # - new survey_IDs are referenced at least once in survey_keys within new counts table
+      # - survey_ids are unique within each study
+      # - study_keys can be found in study_ids
+      # - survey_ids are referenced at least once in survey_keys
       
       # counts_dataframe:
-      # - new survey_keys map to real new survey_IDs
-      # - no duplicate variants after split by study_ID
-      # - split by survey_key and also by gene-locus combination (i.e. the first two characteristics
+      # - survey_keys can be found in survey_ids
+      # - variant_strings are unique within each survey (even if listed in different order)
+      # - variant_num cannot exceed total_num
+      # - after splitting by survey and also by gene-locus combination (i.e. the first two characteristics
       #   of each encoded gene, but not by the observed amino acids):
       #       - total_num must be identical over rows
       #       - variant_num cannot sum to more than total_num
       
       # studies_dataframe:
-      assert_noduplicates(studies_dataframe$study_ID)
-      if (any(studies_dataframe$study_ID %in% private$studies$study_ID)) {
-        stop(wrap_message(paste("studies_dataframe cannot contain any study_IDs that already exist in the loaded",
+      assert_noduplicates(studies_dataframe$study_id)
+      if (any(studies_dataframe$study_id %in% private$studies$study_id)) {
+        stop(wrap_message(paste("studies_dataframe cannot contain any study_ids that already exist in the loaded",
                                 "studies table. If you want to add to an existing study then you must first drop the",
                                 "currently loaded version. See ?drop_study() for how to do this", collapse = "")))
       }
-      if (!all(studies_dataframe$study_ID %in% surveys_dataframe$study_key)) {
-        stop(wrap_message(paste("every study_ID in the studies_dataframe must be referenced at least once in the",
+      if (!all(studies_dataframe$study_id %in% surveys_dataframe$study_key)) {
+        stop(wrap_message(paste("every study_id in the studies_dataframe must be referenced at least once in the",
                                 "study_key column of the surveys_dataframe", collapse = "")))
       }
       
       # surveys_dataframe:
       # make unique ID as combination of study and survey IDs
-      UID <- paste(surveys_dataframe$study_key, surveys_dataframe$survey_ID)
-      assert_noduplicates(UID, message = wrap_message(paste("survey_IDs are allowed to be re-used between studies,",
-                                                            "but the same survey_ID cannot be used within a study",
+      UID <- paste(surveys_dataframe$study_key, surveys_dataframe$survey_id)
+      assert_noduplicates(UID, message = wrap_message(paste("survey_ids are allowed to be re-used between studies,",
+                                                            "but the same survey_id cannot be used within a study",
                                                             collapse = "")))
-      if (!all(surveys_dataframe$study_key %in% studies_dataframe$study_ID)) {
-        stop(wrap_message(paste("every study_key in the surveys_dataframe must be present as a study_ID in the",
+      if (!all(surveys_dataframe$study_key %in% studies_dataframe$study_id)) {
+        stop(wrap_message(paste("every study_key in the surveys_dataframe must be present as a study_id in the",
                                 "studies_dataframe", collapse = "")))
       }
-      if (!all(surveys_dataframe$survey_ID %in% counts_dataframe$survey_key)) {
-        stop(wrap_message(paste("every survey_ID in the surveys_dataframe must be referenced at least once in the",
+      if (!all(surveys_dataframe$survey_id %in% counts_dataframe$survey_key)) {
+        stop(wrap_message(paste("every survey_id in the surveys_dataframe must be referenced at least once in the",
                                 "survey_key column of the counts_dataframe", collapse = "")))
       }
       
       # counts_dataframe:
-      if (!all(counts_dataframe$survey_key %in% surveys_dataframe$survey_ID)) {
-        stop(wrap_message(paste("every survey_key in the counts_dataframe must be present as a survey_ID in the",
+      if (!all(counts_dataframe$survey_key %in% surveys_dataframe$survey_id)) {
+        stop(wrap_message(paste("every survey_key in the counts_dataframe must be present as a survey_id in the",
                                 "surveys_dataframe", collapse = "")))
       }
       

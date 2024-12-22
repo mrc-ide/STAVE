@@ -15,7 +15,8 @@ spatial-temporal genetic data**. By “aggregate” we mean that data
 consist solely of counts (numerator and denominator). By
 “spatial-temporal” we mean that each observation is tied to a specific
 geographic location (latitude and longitude), and a precise collection
-time (a single day).
+time (a single day). This format is a precursor to many types of spatial
+analysis.
 
 The primary goals of STAVE are:
 
@@ -25,7 +26,7 @@ The primary goals of STAVE are:
 3.  To facilitate prevalence calculation from aggregate counts.
 
 All documentation, including installation instructions and tutorials,
-are on [the STAVE website](https://mrc-ide.github.io/STAVE/).
+can be found on [the STAVE website](https://mrc-ide.github.io/STAVE/).
 
 # Version History
 

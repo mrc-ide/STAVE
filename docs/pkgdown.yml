@@ -2,8 +2,11 @@ pandoc: '3.2'
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  data_format: data_format.html
-  Installation: Installation.html
-  tutorial_basic: tutorial_basic.html
-last_built: 2024-12-17T17:05Z
+  calculating_prevalence: calculating_prevalence.html
+  input_formats: input_formats.html
+  installation: installation.html
+  reading_in_data: reading_in_data.html
+  relational_structure: relational_structure.html
+  variant_strings: variant_strings.html
+last_built: 2024-12-22T16:13Z
 

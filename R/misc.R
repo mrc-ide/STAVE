@@ -29,7 +29,7 @@ assert_valid_string <- function(input_strings, message_name) {
   
   # stop if invalid
   if (!is_valid) {
-    stop(paste(c(sprintf("%s is not a valid identifier, meaning it:", message_name),
+    stop(paste(c(sprintf("%s is not a valid identifier. It must:", message_name),
                  "- consist only of English letters (upper or lower case), numbers (0-9), or underscores (_).",
                  "- The first character cannot be a number or an underscore."), collapse = "\n"))
   }
