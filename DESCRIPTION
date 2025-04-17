@@ -18,7 +18,8 @@ Imports:
     dplyr,
     lubridate,
     R6,
-    stringr
+    stringr,
+    variantstring
 Remotes:
     mrc-ide/variantstring@1.8.2
 RoxygenNote: 7.3.2
