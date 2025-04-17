@@ -1,0 +1,124 @@
+---
+title: "Calculating Prevalence"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculating Prevalence}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+In previous pages we have learned how to encode genetic data in STAVE. Now we turn to the problem of calculating prevalence from the encoded data.
+
+In simple terms, prevalence is calculated as the number of times a variant is observed divided by the number of times it *could have been* observed. However, nuances in prevalence calculation warrant further discussion — particularly in cases of mixed (heterozygous) calls, where it may only be possible to estimate a prevalence range rather than an exact value.
+
+### Matching variant strings
+
+Imagine the following data are loaded:
+
+```{r, echo=FALSE}
+data.frame(study_key = "study_01",
+           survey_key = "survey_01",
+           variant_string = c("crt:76:T", "crt:75_76:ET"),
+           variant_num = c(4, 1),
+           total_num = c(20, 5)) |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE)
+```
+
+Prevalence calculation in STAVE starts by specifying the variant of interest in [variant string format](https://github.com/mrc-ide/variantstring). This is then compared against all data loaded into the current object.
+
+For example, imagine we want to know the prevalence of `crt:76:T`. This is clearly a direct match to the first row, and so these values should be added to the numerator and denominator. It is also a match to the second row, which contains `crt:76:T` as a subset, meaning these values should also be added to the numerator and denominator. This gives prevalence = (4 + 1) / (20 + 5) = 20%.
+
+Now imagine we want to know the prevalence of `crt:76:E`. This is only a match to the second row in terms of the variant, however, it is a match to both rows in terms of position. Hence, we obtain prevalence = 1 / (20 + 5) = 4%.
+
+Finally, imagine we want to know the prevalence of the `crt:75_76:ET` haplotype. This is only a match to the second row in both numerator and denominator. We obtain prevalence = 1 / 5 = 20%.
+
+### Dealing with unphased mixed calls
+
+Now let's look at an example where there are unphased mixed calls:
+
+```{r, echo=FALSE}
+data.frame(study_key = "study_02",
+           survey_key = "survey_01",
+           variant_string = c("crt:72_73_74_75_76:CVIET",
+                              "crt:72_73_74_75_76:CVMNK",
+                              "crt:72_73_74_75_76:CV_I/M_E/N_T/K"),
+           variant_num = c(50, 40, 10),
+           total_num = c(100, 100, 100)) |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE)
+```
+
+Here we have two common *pfcrt* haplotypes, CVIET and CVMNK, as well as some mixed calls.
+
+Imagine we want to know the prevalence of `crt:72_73_74:CVI`. This is a match to the first row, and interestingly it is also an *unambiguous* match to the third row. The third variant `crt:72_73_74_75_76:CV_I/M_E/N_T/K` contains multiple unphased heterozygous sites, meaning we cannot work out the exact component haplotypes that make up this mixture. However, looking solely at positions 72 to 74, we know for certain that the haplotypes CVI and CVM are present. Therefore we can be certain that this matches our target. We obtain prevalence = (50 + 10) / 100 = 60%.
+
+Now imagine we want to know the prevalence of the full `crt:72_73_74_75_76:CVMNK` haplotype. This matches the second row, but because there are multiple unphased heterozygous sites in the third row, it is only an *ambiguous* match to this variant. Our target *may* be present in these samples, but equally it may not. This presents a problem - if we include this in the numerator then we risk overestimating the prevalence, but if we exclude it then we risk underestimating. Faced with this dilemma, the approach taken in STAVE is to simply report the **minimum and maximum possible prevalence** implied by the data. This would give min_prevalence = 40 / 100 = 40%, max_prevalence = (40 + 10) / 100 = 50%. It is then up to the user to decide what to do with this.
+
+### Dealing with phased mixed calls
+
+Finally, imagine the same data as before, but now the mixed haplotype is encoded as phased information:
+
+```{r, echo=FALSE}
+data.frame(study_key = "study_03",
+           survey_key = "survey_01",
+           variant_string = c("crt:72_73_74_75_76:CVIET",
+                              "crt:72_73_74_75_76:CVMNK",
+                              "crt:72_73_74_75_76:CV_I|M_E|N_T|K"),
+           variant_num = c(50, 40, 10),
+           total_num = c(100, 100, 100)) |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE)
+```
+
+The mixtures are now clearly specified as a combination of the CVIET and CVMNK haplotypes. If our target is `crt:72_73_74_75_76:CVMNK` as before, this is now an unambiguous match against the second and third rows, giving prevalence = (40 + 10) / 100 = 50%. This is one argument for including phased data wherever possible, although in reality it can be challenging to reliably phase genomes.
+
+More complex situations, such as partial phasing or more than two alleles at a locus, are allowed - see the [variantstring package documentation](https://github.com/mrc-ide/variantstring).
+
+
+
+### (Old stuff)
+
+Prevalence calculation is through the function `get_prevalence()`. It returns the prevalence point estimate (%) along with lower and upper 95% CIs. It does this for every study in the loaded data, and returns results appended together over the *Studies* and *Surveys* table. An example is given below; scroll to the right to see the prevalence estimates:
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# read in data from inst/extdata
+file_path <- system.file("extdata", "vignettes/example_02.xlsx", package = "STAVE")
+input_studies <- readxl::read_excel(file_path, sheet = "studies")
+input_surveys <- readxl::read_excel(file_path, sheet = "surveys")
+input_counts <- readxl::read_excel(file_path, sheet = "counts")
+
+# load data into STAVE
+s <- STAVE_object$new()
+s$append_data(studies_dataframe = input_studies,
+              surveys_dataframe = input_surveys,
+              counts_dataframe = input_counts)
+
+# calculate prevalence and print table
+s$get_prevalence(target_variant = "crt:76:T") |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+---
+
+By now, you should have a good idea for how STAVE works. Jump to the [Installation](articles/installation.html) and [Tutorials](articles/reading_in_data.html) sections to start putting some of these ideas into practice.

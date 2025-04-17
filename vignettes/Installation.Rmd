@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, echo=FALSE}
 library(STAVE)
 ```
 
@@ -27,10 +27,10 @@ You can install the most recent version of STAVE using:
 devtools::install_github("mrc-ide/STAVE")
 ```
 
-It is good practice to specify a version number in your own scripts to ensure future users have exactly the same version loaded. To install a specific version you can use this format:
+It is good practice to specify a version number to ensure future users have exactly the same version loaded. To install a specific version you can use the following format:
 
 ``` r
-devtools::install_github("mrc-ide/STAVE@v1.0.0")
+devtools::install_github("mrc-ide/STAVE@v1.1.0")
 ```
 
 see [here](https://github.com/mrc-ide/STAVE) for the latest version number.

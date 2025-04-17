@@ -1,0 +1,215 @@
+---
+title: "Input Formats"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Input Formats}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+## A custom data class
+
+STAVE works via a single class (an R6 object) that acts as the main data container.
+This class allows users to efficiently import, store, and manipulate genetic
+data via specialized member functions.
+
+For example, a new object can be created and data read in like this:
+
+```{r, eval=FALSE}
+# create new object
+s <- STAVE_object$new()
+
+# append data using a member function
+s$append_data(studies_dataframe = df_studies,
+              surveys_dataframe = df_surveys,
+              counts_dataframe = df_counts)
+```
+
+Notice that the function is attached to the object, accessed via the `$`
+symbol.
+
+Using a custom class offers several key advantages. Once loaded, all data remain
+consolidated within a single object, avoiding fragmentation. The class structure
+also ensures the data are *encapsulated*, meaning they cannot be directly edited
+by the user. This built-in protection minimizes the risk of accidental data
+corruption.
+
+STAVE performs close to 100 rigorous checks on the data during the import
+process. These checks cover a wide range of validations, from ensuring proper
+character formatting to verifying that prevalences do not exceed 100%. If
+the data pass all checks, they are successfully loaded into the object. If not,
+the import is rejected, and an informative error message is provided.
+
+A core principle of STAVE is that it does not modify the input data during
+import. For instance, if column headers in your dataset contain capital letters
+when only lowercase is allowed, STAVE will **not** automatically convert them
+for you — even though it could! Instead it will reject the import. This strict
+approach ensures that users are fully aware of the exact structure of their
+input data, meaning there is only a single format used universally by anyone
+using STAVE. The downside is that you must conform to this structure in order to
+use the package.
+
+The remainder of this page specifies the formatting requirements for each of the
+three input tables.
+
+---
+
+## The *Studies* table
+
+This table captures information about the origin of the data. An example of a correctly formatted *Studies* table is given below:
+
+```{r, echo=FALSE}
+# check that this can be loaded without error!
+s <- STAVE_object$new()
+s$append_data(studies_dataframe = example_input$studies,
+              surveys_dataframe = example_input$surveys,
+              counts_dataframe = example_input$counts) |>
+  suppressMessages()
+```
+
+```{r, echo=FALSE}
+example_input$studies |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+The only mandatory fields are *study_id* and *url*. **Please ensure that URLs are accurate and permanent**, as they serve as the sole external reference for verifying the origin of the data.
+
+All other fields are optional, meaning cells can be left blank, although column headings must still be included. These optional fields have minimal formatting requirements and are primarily intended for storing descriptive information to help you quickly identify a study. The exception is *study_type*, which must adhere to a predefined set of options (see below).
+
+### Study IDs
+
+Study IDs must be "valid identifiers", meaning they must:
+
+- Contain only English letters (uppercase or lowercase), numbers (0-9), or underscores (_).
+- Not begin with a number or an underscore.
+
+Beyond these restrictions, any naming convention can be used. However, it is recommended to adopt a systematic approach to avoid potential conflicts. For instance, using generic IDs like “study1” is not a good idea, as such IDs could overlap with those from other datasets, causing issues when combining data. A better approach is to use a concise, descriptive format, such as the first author’s surname and the year of publication, e.g., Bloggs_2024.
+
+### Data types
+
+Each column has its own rules about data type:
+
+```{r, echo=FALSE}
+
+rbind.data.frame(list(Column = "study_id", Compulsory = "Y", Type = "Valid identifier (see above)"),
+                 list(Column = "study_name", Compulsory = "N", Type = "Character string"),
+                 list(Column = "study_type", Compulsory = "N", Type = "One of {'peer_reviewed', 'preprint', 'other', 'private'}"),
+                 list(Column = "authors", Compulsory = "N", Type = "Character string"),
+                 list(Column = "publication_year", Compulsory = "N", Type = "Positive integer"),
+                 list(Column = "url", Compulsory = "Y", Type = "Character string")) |>
+  kbl(dformat = "html") |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1, width = "100px") |>
+  column_spec(2, width = "50px")
+```
+
+If any entries have *study_type* that is *private* then a warning message will be printed when data are imported. This warning does not prevent data from being loaded, but flags to the user that private data are present in case this was not intentional.
+
+---
+
+## The *Surveys* table
+
+The *Surveys* table captures information about the context within which data were collected. We can think of a survey here as a *single instance of data collection*. An example of a correctly formatted *Surveys* table is given below:
+
+```{r, echo=FALSE}
+example_input$surveys |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+Notice that the `study_key` links back to the *Studies* table. This table must include the fields *latitude*, *longitude*, and *collection_day*. In some cases, this information might not be directly available in the raw data. For example, locations may only be reported at a regional level, or collection periods might span an entire season. Nonetheless, STAVE **strictly enforces** the requirement that data must be provided as a single point in space and time. There are several reasons for this strict requirement:
+
+1. **Support for spatial modeling methods:** Many spatial methods, such as those modeling prevalence as a continuous surface in space and time, rely on precise point-level data. These methods struggle to accommodate areal data, such as prevalence reported only at the province level.
+2. **Avoidance of ambiguity in location reporting:** Using spatial coordinates eliminates the ambiguities associated with place names. For instance, “Côte d’Ivoire” could also appear as “Cote d’Ivoire” (without accents), “Republic of Côte d’Ivoire,” “Ivory Coast,” or many other variations. This issue is even more pronounced for site names, where interpretations may vary — for example, the name of a health facility versus the name of a nearby village. Even standardized identifiers like [ISO 3166](https://www.iso.org/iso-3166-country-codes.html) country codes can pose challenges, as countries and their political boundaries may change over time. Latitude and longitude are inherently stable and precise, making them the most reliable method for identifying collection locations.
+
+Note that the *Surveys* table includes fields for *country_name*, *site_name*, *collection_start* and *collection_end*, however, these fields are solely for convenience. They allow users to quickly scan the table to identify where and when data were collected. Ideally, **they should not be used for spatial analysis**. A more robust approach would be to overlay these spatial coordinates with a shapefile (e.g., from [GADM](https://gadm.org/)) to determine the country or region of each survey, and then to use this as the country identifier in the analysis, rather than the value stored in *country_name*. This method enables country-level analysis while avoiding the risks of errors or ambiguities associated with inconsistent or conflicting country names.
+
+When exact locations or collection timings are unavailable, data imputation may be necessary. For example, the centroid of a region could be used to approximate the spatial location, or the midpoint of a collection range to estimate the timing. In these cases, the optional fields *spatial_notes* and *time_notes* should be used to document the methods and assumptions applied during data preparation.
+
+### Survey IDs
+
+As with Study IDs, Survey IDs must be valid identifiers. The same survey ID can be reused across different studies, for example two studies can both include a survey with the ID “south_district”, but if this ID was found twice within the same study this would throw an error. This ensures the integrity of the relational links while allowing some flexibility across studies.
+
+### Collection times
+
+Dates are always a tricky issue as there are so many different possible conventions. STAVE requires that dates be stored as YYYY-MM-DD format, for example a valid date would be `"2024-01-19"`. This avoids confusion caused by regional date formats, for example MM/DD/YYYY common in the US vs. DD/MM/YYYY common in Europe. It also has the added advantage that dates are sortable numerically.
+
+Dates should be represented as *character strings*. There is no need to convert to a specific `Date` class using packages like `lubridate`.
+
+### Data types
+
+Each column has its own rules about data type:
+
+```{r, echo=FALSE}
+
+rbind.data.frame(list(Column = "study_key", Compulsory = "Y", Type = "Valid identifier (see above)"),
+                 list(Column = "survey_id", Compulsory = "Y", Type = "Valid identifier (see above)"),
+                 list(Column = "country_name", Compulsory = "N", Type = "Character string"),
+                 list(Column = "site_name", Compulsory = "N", Type = "Character string"),
+                 list(Column = "latitude", Compulsory = "Y", Type = "Numeric, from -180 to +180"),
+                 list(Column = "longitude", Compulsory = "Y", Type = "Numeric, from -180 to +180"),
+                 list(Column = "spatial_notes", Compulsory = "N", Type = "Character string"),
+                 list(Column = "collection_start", Compulsory = "N", Type = "Valid date string (see above)"),
+                 list(Column = "collection_end", Compulsory = "N", Type = "Valid date string (see above)"),
+                 list(Column = "collection_day", Compulsory = "Y", Type = "Valid date string (see above)"),
+                 list(Column = "time_notes", Compulsory = "N", Type = "Character string")) |>
+  kbl(dformat = "html") |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1, width = "100px") |>
+  column_spec(2, width = "50px")
+```
+
+---
+
+## The *Counts* table
+
+The final table is the *Counts* table, which stores the genetic information. An example of a correctly formatted *Counts* table is given below:
+
+```{r, echo=FALSE}
+example_input$counts |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+All columns in this table are compulsory. The *variant_string* format is defined in the [*variantstring* package](https://github.com/mrc-ide/variantstring) - see that package documentation for details. The *variant_num* gives the number of times this variant was observed, and the *total_num* gives the number of times this locus or combination of loci was successfully sequenced. You can think of *variant_num* as the numerator in a prevalence calculation, and *total_num* as the denominator.
+
+### Data types
+
+Each column has its own rules about data type:
+
+```{r, echo=FALSE}
+
+rbind.data.frame(list(Column = "study_key", Compulsory = "Y", Type = "Valid identifier (see above)"),
+                 list(Column = "variant_string", Compulsory = "Y", Type = "Valid variant string"),
+                 list(Column = "variant_num", Compulsory = "Y", Type = "Positive integer or zero"),
+                 list(Column = "total_num", Compulsory = "Y", Type = "Positive integer")) |>
+  kbl(dformat = "html") |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1, width = "100px") |>
+  column_spec(2, width = "50px")
+```
+
+---
+
+The [next page](articles/counts_format.html) shows how to encode genetic data in the *Counts* table.

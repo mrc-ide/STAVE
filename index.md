@@ -1,22 +1,17 @@
 
-# STAVE
+<img src="reference/figures/hex.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;">
 
-STAVE is an R package designed for storing and managing aggregate
-spatial-temporal genetic data. By “aggregate” we mean that data consist solely
-of counts (numerator and denominator), rather than individual-level details. By
-“spatial-temporal” we mean that each observation is tied to a specific
-geographic location (latitude and longitude), and a precise collection time (a
-single day). Once data are loaded into STAVE it becomes straightforward to
-calculate the prevalence of different genetic variants at each sampling
-location, making this a useful format for data harmonization prior to spatial
-analysis.
+STAVE is a lightweight R package focused on a specific use case: working with aggregated genetic data for molecular surveillance. It provides three core functionalities:
 
-At the core of STAVE is a single class (an R6 object) that serves as the main data
-container. This class enables users to efficiently import, store, and manipulate
-genetic data. All operations, such as calculating prevalence, are performed
-through dedicated member functions.
+1. **Storage of aggregate genetic data using [variant
+string format](https://github.com/mrc-ide/variantstring)**. STAVE encodes numerator/denominator-style data in a compact string representation tailored for amino acid-level variation. This format supports both single codons and multi-locus haplotypes, making it especially suitable for drug resistance markers.
+2. **Linkage of genetic data to precise space-time coordinates**. Rather than relying on administrative names (which may be ambiguous or change over time), STAVE links each data point to specific geographic coordinates and timestamps, ensuring consistency across datasets.
+3. **Computation of prevalence from encoded data**. Calculating prevalence isn’t always straightforward. For instance, the variant of interest may represent only a subset of a broader haplotype, or the data may include mixed (heterozygous) calls. STAVE handles these complexities with dedicated logic.
 
-This site describes the [STAVE data format](TODO). It also contains
-[installation instructions](TODO) and simple [tutorials](TODO) to help you get
-started.
+STAVE is deliberately kept simple and focused. It’s designed to do just these three things—and to do them reliably. While it doesn’t cover everything (for example, it doesn’t deal with individual-level data or generate maps), it helps streamline one tricky part of working with genetic surveillance data. It’s intended to fit neatly into a broader workflow, making life a little easier for researchers working in this space.
+
+The [How it works](articles/relational_structure.html) section describes the
+STAVE data format, which you will need to understand before importing data. Once
+you are ready, checkout the [Installation](articles/installation.html) and
+[Tutorials](articles/reading_in_data.html) sections for practical examples.
 

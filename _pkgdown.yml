@@ -4,18 +4,28 @@ template:
   bootswatch: simplex
 
 navbar:
-  title: "malariasimulation"
-  structure:
-    left: [Format, Installation, Tutorials, Functions]
-    right: [icon]
-  components:
-    vignettes:
-      text: "Installation"
+  title: DRpower
+  left:
+    - text: How it works
       menu:
-        href: articles/installation.html
-    functions:
-      text: "Functions"
+        - text: The relational data structure
+          href: articles/relational_structure.html
+        - text: Input formats
+          href: articles/input_formats.html
+        - text: Encoding genetic data
+          href: articles/variant_strings.html
+        - text: Calculating prevalence
+          href: articles/calculating_prevalence.html
+    - text: Installation
+      href: articles/installation.html
+    - text: Tutorials
+      menu:
+        - text: Reading in data and calculating prevalence
+          href: articles/reading_in_data.html
+#        - text: Aggregating and mapping results
+#          href: articles/aggregating.html
+    - text: Functions
       href: reference/index.html
-    icon:
-      icon: fa-github
-      href: https://github.com/mrc-ide/stave
+  right:
+   - icon: fa-github
+     href: https://github.com/mrc-ide/stave
