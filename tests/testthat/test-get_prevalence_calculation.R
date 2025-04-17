@@ -5,6 +5,8 @@ test_that("get_prevalence() checks calculations return the expected values", {
   input_studies <- readxl::read_excel(file_path, sheet = "studies")
   input_surveys <- readxl::read_excel(file_path, sheet = "surveys")
   input_counts <- readxl::read_excel(file_path, sheet = "counts")
+  input_prevalence <- readxl::read_excel(file_path, sheet = "prevalence")
+  input_prevalence2 <- readxl::read_excel(file_path, sheet = "prevalence2")
   
   # make object and load data
   z <- STAVE_object$new()
@@ -13,18 +15,30 @@ test_that("get_prevalence() checks calculations return the expected values", {
                 counts_dataframe = input_counts) |>
     suppressMessages()
   
-  # calculate prevalence
-  p <- z$get_prevalence("crt:72:C")
-  expect_equal(p$numerator, 4)
-  expect_equal(p$denominator, 30)
+  # test all prevalences in the input_prevalence table
+  for (i in 1:nrow(input_prevalence)) {
+    
+    # calculate prevalence
+    p <- z$get_prevalence(target_variant = input_prevalence$target_variant[i],
+                          keep_ambiguous = input_prevalence$keep_ambiguous[i],
+                          prev_from_min = input_prevalence$prev_from_min[i]) |>
+      suppressWarnings()
+    
+    expect_equal(p$numerator, input_prevalence$numerator[i])
+    expect_equal(p$denominator, input_prevalence$denominator[i])
+  }
   
-  p <- z$get_prevalence("crt:72_73:A_A", keep_ambiguous = TRUE, prev_from_min = TRUE)
-  expect_equal(p$numerator_min, 1)
-  expect_equal(p$numerator_max, 2)
-  expect_equal(p$denominator, 20)
-  
-  p <- z$get_prevalence("k13:580:Y")
-  expect_equal(p$numerator, 0)
-  expect_equal(p$denominator, 0)
+  # test all prevalences in the input_prevalence2 table
+  for (i in 1:nrow(input_prevalence2)) {
+    
+    # calculate prevalence
+    p <- z$get_prevalence(target_variant = input_prevalence$target_variant[i],
+                          keep_ambiguous = input_prevalence$keep_ambiguous[i],
+                          prev_from_min = input_prevalence$prev_from_min[i]) |>
+      suppressWarnings()
+    
+    expect_equal(p$numerator, input_prevalence$numerator[i])
+    expect_equal(p$denominator, input_prevalence$denominator[i])
+  }
   
 })

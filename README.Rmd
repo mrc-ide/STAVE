@@ -19,22 +19,21 @@ knitr::opts_chunk$set(
 [![develop checks](https://github.com/mrc-ide/STAVE/workflows/checks_develop/badge.svg)](https://github.com/mrc-ide/STAVE/actions)
 [![Codecov test coverage](https://codecov.io/gh/mrc-ide/STAVE/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mrc-ide/STAVE?branch=main)
 
-STAVE is an R package designed for storing and managing **aggregate
-spatial-temporal genetic data**. By “aggregate” we mean that data consist solely
-of counts (numerator and denominator). By “spatial-temporal” we mean that each
-observation is tied to a specific geographic location (latitude and longitude),
-and a precise collection time (a single day). This format is a precursor to many
-types of spatial analysis.
+STAVE is an R package with three basic functionalities:
 
-The primary goals of STAVE are:
-
-1. To provide a flexible data structure that can accommodate genetic data with varying levels of detail.
-2. To standardize data through a tightly defined format.
-3. To facilitate prevalence calculation from aggregate counts.
+1. **Stores aggregate genetic data (i.e. numerator and denominator) in [variant
+string format](https://github.com/mrc-ide/variantstring)**. This is a convenient
+format when dealing with amino acid level data, as is common for drug resistance
+markers. It can handle single codons as well as multi-locus haplotypes.
+2. **Links genetic data to a specific point in space and time**. This avoids any
+issues with country or admin names changing or being spelled differently.
+3. **Calculates prevalence from the encoded data**. This is not as simple as it
+sounds, for example the variant of interest may be a subset of an encoded
+haplotype, or there may be mixed (heterozygous) calls in the data.
 
 All documentation, including installation instructions and tutorials, can be found on [the STAVE website](https://mrc-ide.github.io/STAVE/).
 
 
 # Version History
 
-The current version of the software is 1.0.0, released 16 Oct 2024.
+The current version of the software is 1.1.0, released 17 Apr 2025.

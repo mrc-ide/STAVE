@@ -10,9 +10,9 @@ navbar:
       menu:
         - text: The relational data structure
           href: articles/relational_structure.html
-        - text: Input data formats
+        - text: Input formats
           href: articles/input_formats.html
-        - text: Encoding variants as strings
+        - text: Encoding genetic data
           href: articles/variant_strings.html
         - text: Calculating prevalence
           href: articles/calculating_prevalence.html
@@ -20,10 +20,10 @@ navbar:
       href: articles/installation.html
     - text: Tutorials
       menu:
-        - text: Reading in data
-          href: TODO
-        - text: Calculating prevalence and other outputs
-          href: TODO
+        - text: Reading in data and calculating prevalence
+          href: articles/reading_in_data.html
+#        - text: Aggregating and mapping results
+#          href: articles/aggregating.html
     - text: Functions
       href: reference/index.html
   right:

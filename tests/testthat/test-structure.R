@@ -19,7 +19,6 @@ test_that("tests of failing to load bad data due to structural problems", {
       suppressMessages() |>
       expect_error()
   }
-  
 })
 
 test_that("tests of successfully loading data even when there is complex structure", {
@@ -43,6 +42,5 @@ test_that("tests of successfully loading data even when there is complex structu
       suppressMessages() |>
       expect_error(NA)
   }
-  
 })
 

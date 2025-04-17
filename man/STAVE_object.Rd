@@ -22,10 +22,10 @@ are:
     time. Surveys are given survey_ids and are linked to a particular study
     through the study_id.
     \item counts: The actual genetic information, which is linked to a
-    particular survey through the survey_id. Genetic variants are encoded in
-    character strings that must follow a specified format, and the number of
-    times this variant was observed among the total sample is stored in
-    columns.
+    particular study and survey through the study_id and survey_id. Genetic
+    variants are encoded in character strings that must follow a specified
+    format, and the number of times this variant was observed among the total
+    sample is stored in columns.
   }
 This combination of linked tables allows efficient and flexible encoding of
 variants, while avoiding unnecessary duplication of information.
@@ -123,13 +123,11 @@ study_name, study_type, authors, publication_year, url}
 \item{\code{surveys_dataframe}}{a data.frame containing information at the
 survey level. This data.frame must have the following columns:
 study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
-collection_start, collection_end, time_notes. The study_key element
-must correspond to a study_id in the studies_dataframe.}
+collection_start, collection_end, collection_day, time_notes.}
 
 \item{\code{counts_dataframe}}{a data.frame of genetic information. Must contain
-the following columns: survey_key, variant_string, variant_num,
-total_num. The survey_key element must correspond to a valid survey_id
-in the surveys_dataframe.}
+the following columns: study_key, survey_key, variant_string, variant_num,
+total_num.}
 }
 \if{html}{\out{</div>}}
 }
@@ -143,31 +141,39 @@ Calculate prevalence
 \if{html}{\out{<div class="r">}}\preformatted{STAVE_object$get_prevalence(
   target_variant,
   keep_ambiguous = FALSE,
-  prev_from_min = TRUE
+  prev_from_min = TRUE,
+  return_full = TRUE
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{target_variant}}{the name of the variant on which we want to
-calculate prevalence, for example crt:72:C. Note that there can be no
-heterozygous calls within this name.}
+\item{\code{target_variant}}{the variant on which to calculate prevalence, for
+example crt:72:C. There can be no heterozygous calls within this
+string.}
 
 \item{\code{keep_ambiguous}}{there may be variants in the data for which the
 target_variant could be in the sample, but this cannot be proven
 conclusively. For example, the sequence A_A_A may be a match to the
-sequence A/C_A/C_A or it may not, these are unphased genotypes so we
+sequence A/C_A/C_A, or it may not. These are unphased genotypes so we
 cannot be sure. If \code{keep_ambiguous = TRUE} then both a min and a
-max numerator are reported that either exclude all ambiguous calls
-(min) or include all ambiguous calls (max). If \code{FALSE} (the
-default) then only the min is reported.}
+max numerator are reported that either include all ambiguous calls as
+matches (max) or exclude them as mismatches (min). If \code{FALSE} (the
+default) then ambiguous calls are skipped over, which may downwardly
+bias prevalence calculation.}
 
 \item{\code{prev_from_min}}{the output object includes a point estimate of the
-prevalence along with exact binomial confidence intervals. These must
-be calculated from one of \code{numerator_min} or \code{numerator_max}
-in the case of ambiguous calls. This argument sets which one of these
-numerators is used in the calculation.
+prevalence along with exact binomial confidence intervals. In the case
+of ambiguous calls, these must be calculated from one of
+\code{numerator_min} or \code{numerator_max}. This argument sets which
+one of these values is used in the calculation. Defaults to
+\code{TRUE}, which risks underestimating prevalence.}
+
+\item{\code{return_full}}{if \code{TRUE} (the default) returns the entire loaded
+dataset, with prevalence equal to \code{NA} if there is no denominator.
+If \code{FALSE} only returns entries for which there is a non-zero
+denominator.
 
 @import dplyr}
 }

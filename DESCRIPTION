@@ -19,6 +19,8 @@ Imports:
     lubridate,
     R6,
     stringr
+Remotes:
+    mrc-ide/variantstring@1.8.2
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0),

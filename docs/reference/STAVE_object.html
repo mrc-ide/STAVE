@@ -26,8 +26,8 @@ package is through this class in the form of member functions."><!-- mathjax -->
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/relational_structure.html">The relational data structure</a>
-    <a class="dropdown-item" href="../articles/input_formats.html">Input data formats</a>
-    <a class="dropdown-item" href="../articles/variant_strings.html">Encoding variants as strings</a>
+    <a class="dropdown-item" href="../articles/input_formats.html">Input formats</a>
+    <a class="dropdown-item" href="../articles/variant_strings.html">Encoding genetic data</a>
     <a class="dropdown-item" href="../articles/calculating_prevalence.html">Calculating prevalence</a>
   </div>
 </li>
@@ -37,8 +37,7 @@ package is through this class in the form of member functions."><!-- mathjax -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="dropdown-item" href="../TODO">Reading in data</a>
-    <a class="dropdown-item" href="../TODO">Calculating prevalence and other outputs</a>
+    <a class="dropdown-item" href="../articles/reading_in_data.html">Reading in data and calculating prevalence</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -85,10 +84,10 @@ are:</p><ol><li><p>studies: Information on where the data came from, for example
     time. Surveys are given survey_ids and are linked to a particular study
     through the study_id.</p></li>
 <li><p>counts: The actual genetic information, which is linked to a
-    particular survey through the survey_id. Genetic variants are encoded in
-    character strings that must follow a specified format, and the number of
-    times this variant was observed among the total sample is stored in
-    columns.</p></li>
+    particular study and survey through the study_id and survey_id. Genetic
+    variants are encoded in character strings that must follow a specified
+    format, and the number of times this variant was observed among the total
+    sample is stored in columns.</p></li>
 </ol><p>This combination of linked tables allows efficient and flexible encoding of
 variants, while avoiding unnecessary duplication of information.</p>
     </div>
@@ -176,15 +175,13 @@ study_name, study_type, authors, publication_year, url</p></dd>
 <dd><p>a data.frame containing information at the
 survey level. This data.frame must have the following columns:
 study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
-collection_start, collection_end, time_notes. The study_key element
-must correspond to a study_id in the studies_dataframe.</p></dd>
+collection_start, collection_end, collection_day, time_notes.</p></dd>
 
 
 <dt><code>counts_dataframe</code></dt>
 <dd><p>a data.frame of genetic information. Must contain
-the following columns: survey_key, variant_string, variant_num,
-total_num. The survey_key element must correspond to a valid survey_id
-in the surveys_dataframe.</p></dd>
+the following columns: study_key, survey_key, variant_string, variant_num,
+total_num.</p></dd>
 
 
 </dl><p></p></div>
@@ -197,35 +194,45 @@ in the surveys_dataframe.</p></dd>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">STAVE_object</span><span class="op">$</span><span class="fu">get_prevalence</span><span class="op">(</span></span>
 <span>  <span class="va">target_variant</span>,</span>
 <span>  keep_ambiguous <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  prev_from_min <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  prev_from_min <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  return_full <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>target_variant</code></dt>
-<dd><p>the name of the variant on which we want to
-calculate prevalence, for example crt:72:C. Note that there can be no
-heterozygous calls within this name.</p></dd>
+<dd><p>the variant on which to calculate prevalence, for
+example crt:72:C. There can be no heterozygous calls within this
+string.</p></dd>
 
 
 <dt><code>keep_ambiguous</code></dt>
 <dd><p>there may be variants in the data for which the
 target_variant could be in the sample, but this cannot be proven
 conclusively. For example, the sequence A_A_A may be a match to the
-sequence A/C_A/C_A or it may not, these are unphased genotypes so we
+sequence A/C_A/C_A, or it may not. These are unphased genotypes so we
 cannot be sure. If <code>keep_ambiguous = TRUE</code> then both a min and a
-max numerator are reported that either exclude all ambiguous calls
-(min) or include all ambiguous calls (max). If <code>FALSE</code> (the
-default) then only the min is reported.</p></dd>
+max numerator are reported that either include all ambiguous calls as
+matches (max) or exclude them as mismatches (min). If <code>FALSE</code> (the
+default) then ambiguous calls are skipped over, which may downwardly
+bias prevalence calculation.</p></dd>
 
 
 <dt><code>prev_from_min</code></dt>
 <dd><p>the output object includes a point estimate of the
-prevalence along with exact binomial confidence intervals. These must
-be calculated from one of <code>numerator_min</code> or <code>numerator_max</code>
-in the case of ambiguous calls. This argument sets which one of these
-numerators is used in the calculation.</p>
+prevalence along with exact binomial confidence intervals. In the case
+of ambiguous calls, these must be calculated from one of
+<code>numerator_min</code> or <code>numerator_max</code>. This argument sets which
+one of these values is used in the calculation. Defaults to
+<code>TRUE</code>, which risks underestimating prevalence.</p></dd>
+
+
+<dt><code>return_full</code></dt>
+<dd><p>if <code>TRUE</code> (the default) returns the entire loaded
+dataset, with prevalence equal to <code>NA</code> if there is no denominator.
+If <code>FALSE</code> only returns entries for which there is a non-zero
+denominator.</p>
 <p>@import dplyr</p></dd>
 
 

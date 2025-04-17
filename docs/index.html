@@ -39,8 +39,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="articles/relational_structure.html">The relational data structure</a>
-    <a class="dropdown-item" href="articles/input_formats.html">Input data formats</a>
-    <a class="dropdown-item" href="articles/variant_strings.html">Encoding variants as strings</a>
+    <a class="dropdown-item" href="articles/input_formats.html">Input formats</a>
+    <a class="dropdown-item" href="articles/variant_strings.html">Encoding genetic data</a>
     <a class="dropdown-item" href="articles/calculating_prevalence.html">Calculating prevalence</a>
   </div>
 </li>
@@ -50,8 +50,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="dropdown-item" href="TODO">Reading in data</a>
-    <a class="dropdown-item" href="TODO">Calculating prevalence and other outputs</a>
+    <a class="dropdown-item" href="articles/reading_in_data.html">Reading in data and calculating prevalence</a>
   </div>
 </li>
 <li class="nav-item">
@@ -77,9 +76,17 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><p><img src="reference/figures/hex.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;"></p>
-<p>STAVE is an R package designed for storing and managing <strong>aggregate spatial-temporal genetic data</strong>. By “aggregate” we mean that data consist solely of counts (numerator and denominator), rather than individual-level details. By “spatial-temporal” we mean that each observation is tied to a specific geographic location (latitude and longitude), and a precise collection time (a single day).</p>
-<p>Once data are loaded into STAVE it becomes straightforward to calculate the prevalence of different genetic variants at each sampling location, making this a useful format for data harmonization prior to spatial analysis.</p>
-<p>This site describes the <a href="articles/relational_structure.html">STAVE data format</a>. It also contains <a href="articles/installation.html">installation instructions</a> and simple <a href="articles/reading_in_data.html">tutorials</a> to help you get started.</p>
+<p>STAVE is a lightweight R package focused on a specific use case: working with aggregated genetic data for molecular surveillance. It provides three core functionalities:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Storage of aggregate genetic data using <a href="https://github.com/mrc-ide/variantstring" class="external-link">variant string format</a></strong>. STAVE encodes numerator/denominator-style data in a compact string representation tailored for amino acid-level variation. This format supports both single codons and multi-locus haplotypes, making it especially suitable for drug resistance markers.</li>
+<li>
+<strong>Linkage of genetic data to precise space-time coordinates</strong>. Rather than relying on administrative names (which may be ambiguous or change over time), STAVE links each data point to specific geographic coordinates and timestamps, ensuring consistency across datasets.</li>
+<li>
+<strong>Computation of prevalence from encoded data</strong>. Calculating prevalence isn’t always straightforward. For instance, the variant of interest may represent only a subset of a broader haplotype, or the data may include mixed (heterozygous) calls. STAVE handles these complexities with dedicated logic.</li>
+</ol>
+<p>STAVE is deliberately kept simple and focused. It’s designed to do just these three things—and to do them reliably. While it doesn’t cover everything (for example, it doesn’t deal with individual-level data or generate maps), it helps streamline one tricky part of working with genetic surveillance data. It’s intended to fit neatly into a broader workflow, making life a little easier for researchers working in this space.</p>
+<p>The <a href="articles/relational_structure.html">How it works</a> section describes the STAVE data format, which you will need to understand before importing data. Once you are ready, checkout the <a href="articles/installation.html">Installation</a> and <a href="articles/reading_in_data.html">Tutorials</a> sections for practical examples.</p>
 
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>

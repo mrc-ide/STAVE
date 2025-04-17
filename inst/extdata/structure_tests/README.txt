@@ -3,17 +3,17 @@ Files test the following qualities:
 
 invalid_structure (expect fail):
 
-invalid_structure_01: study_ids are not unique
-invalid_structure_02: study_ids are not referenced in study_keys
-invalid_structure_03: survey_ids are not unique within a study
-invalid_structure_04: study_keys cannot be found in study_ids
-invalid_structure_05: survey_ids are not referenced in survey_keys
-invalid_structure_06: survey_keys cannot be found in survey_ids
-invalid_structure_07: variant_strings are duplicated within a survey (although listed in different order)
+invalid_structure_01: study_ids (in studies table) are not unique
+invalid_structure_02: study_ids (in studies table) are not referenced in study_keys (in surveys table)
+invalid_structure_03: combination of study_keys and survey_ids (in surveys table) are not unique
+invalid_structure_04: study_keys (in surveys table) cannot be found in study_ids (in studies table)
+invalid_structure_05: combination of study_keys and survey_ids (in surveys table) are not referenced in counts table
+invalid_structure_06: combination of study_keys and survey_keys (in counts table) cannot be found in surveys table
+invalid_structure_07: variant_strings are duplicated within a study-survey combination (although listed in different order)
 invalid_structure_08: variant_num exceeds total_num
-invalid_structure_09: total_num is not identical after grouping by survey-gene-locus
-invalid_structure_10: variant_num sums to more than total_num within a survey-gene-locus combination
+invalid_structure_09: total_num is not identical after grouping by study_id, survey_id, and gene-locus combination
+invalid_structure_10: variant_num sums to more than total_num
 
 correct_structure (expect pass):
 
-1. Tests that NAs in optional columns are treated correctly
+correct_structure_01: checks that missing values are treated correctly

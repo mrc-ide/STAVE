@@ -39,8 +39,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/relational_structure.html">The relational data structure</a>
-    <a class="dropdown-item" href="../articles/input_formats.html">Input data formats</a>
-    <a class="dropdown-item" href="../articles/variant_strings.html">Encoding variants as strings</a>
+    <a class="dropdown-item" href="../articles/input_formats.html">Input formats</a>
+    <a class="dropdown-item" href="../articles/variant_strings.html">Encoding genetic data</a>
     <a class="dropdown-item" href="../articles/calculating_prevalence.html">Calculating prevalence</a>
   </div>
 </li>
@@ -50,8 +50,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="dropdown-item" href="../TODO">Reading in data</a>
-    <a class="dropdown-item" href="../TODO">Calculating prevalence and other outputs</a>
+    <a class="dropdown-item" href="../articles/reading_in_data.html">Reading in data and calculating prevalence</a>
   </div>
 </li>
 <li class="nav-item">
@@ -78,7 +77,7 @@
 
 
 
-
+<script src="calculating_prevalence_files/kePrint-0.0.1/kePrint.js"></script><link href="calculating_prevalence_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Calculating Prevalence</h1>
@@ -90,8 +89,433 @@
 
     
     
-
-  </main>
+<p>In previous pages we have learned how to encode genetic data in
+STAVE. Now we turn to the problem of calculating prevalence from the
+encoded data.</p>
+<p>In simple terms, prevalence is calculated as the number of times a
+variant is observed divided by the number of times it <em>could have
+been</em> observed. However, nuances in prevalence calculation warrant
+further discussion — particularly in cases of mixed (heterozygous)
+calls, where it may only be possible to estimate a prevalence range
+rather than an exact value.</p>
+<div class="section level3">
+<h3 id="matching-variant-strings">Matching variant strings<a class="anchor" aria-label="anchor" href="#matching-variant-strings"></a>
+</h3>
+<p>Imagine the following data are loaded:</p>
+<table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
+<thead><tr>
+<th style="text-align:left;">
+study_key
+</th>
+<th style="text-align:left;">
+survey_key
+</th>
+<th style="text-align:left;">
+variant_string
+</th>
+<th style="text-align:right;">
+variant_num
+</th>
+<th style="text-align:right;">
+total_num
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+study_01
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:76:T
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+study_01
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:75_76:ET
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Prevalence calculation in STAVE starts by specifying the variant of
+interest in <a href="https://github.com/mrc-ide/variantstring" class="external-link">variant
+string format</a>. This is then compared against all data loaded into
+the current object.</p>
+<p>For example, imagine we want to know the prevalence of
+<code>crt:76:T</code>. This is clearly a direct match to the first row,
+and so these values should be added to the numerator and denominator. It
+is also a match to the second row, which contains <code>crt:76:T</code>
+as a subset, meaning these values should also be added to the numerator
+and denominator. This gives prevalence = (4 + 1) / (20 + 5) = 20%.</p>
+<p>Now imagine we want to know the prevalence of <code>crt:76:E</code>.
+This is only a match to the second row in terms of the variant, however,
+it is a match to both rows in terms of position. Hence, we obtain
+prevalence = 1 / (20 + 5) = 4%.</p>
+<p>Finally, imagine we want to know the prevalence of the
+<code>crt:75_76:ET</code> haplotype. This is only a match to the second
+row in both numerator and denominator. We obtain prevalence = 1 / 5 =
+20%.</p>
+</div>
+<div class="section level3">
+<h3 id="dealing-with-unphased-mixed-calls">Dealing with unphased mixed calls<a class="anchor" aria-label="anchor" href="#dealing-with-unphased-mixed-calls"></a>
+</h3>
+<p>Now let’s look at an example where there are unphased mixed
+calls:</p>
+<table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
+<thead><tr>
+<th style="text-align:left;">
+study_key
+</th>
+<th style="text-align:left;">
+survey_key
+</th>
+<th style="text-align:left;">
+variant_string
+</th>
+<th style="text-align:right;">
+variant_num
+</th>
+<th style="text-align:right;">
+total_num
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+study_02
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CVIET
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+study_02
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CVMNK
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+study_02
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CV_I/M_E/N_T/K
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+</tbody>
+</table>
+<p>Here we have two common <em>pfcrt</em> haplotypes, CVIET and CVMNK,
+as well as some mixed calls.</p>
+<p>Imagine we want to know the prevalence of
+<code>crt:72_73_74:CVI</code>. This is a match to the first row, and
+interestingly it is also an <em>unambiguous</em> match to the third row.
+The third variant <code>crt:72_73_74_75_76:CV_I/M_E/N_T/K</code>
+contains multiple unphased heterozygous sites, meaning we cannot work
+out the exact component haplotypes that make up this mixture. However,
+looking solely at positions 72 to 74, we know for certain that the
+haplotypes CVI and CVM are present. Therefore we can be certain that
+this matches our target. We obtain prevalence = (50 + 10) / 100 =
+60%.</p>
+<p>Now imagine we want to know the prevalence of the full
+<code>crt:72_73_74_75_76:CVMNK</code> haplotype. This matches the second
+row, but because there are multiple unphased heterozygous sites in the
+third row, it is only an <em>ambiguous</em> match to this variant. Our
+target <em>may</em> be present in these samples, but equally it may not.
+This presents a problem - if we include this in the numerator then we
+risk overestimating the prevalence, but if we exclude it then we risk
+underestimating. Faced with this dilemma, the approach taken in STAVE is
+to simply report the <strong>minimum and maximum possible
+prevalence</strong> implied by the data. This would give min_prevalence
+= 40 / 100 = 40%, max_prevalence = (40 + 10) / 100 = 50%. It is then up
+to the user to decide what to do with this.</p>
+</div>
+<div class="section level3">
+<h3 id="dealing-with-phased-mixed-calls">Dealing with phased mixed calls<a class="anchor" aria-label="anchor" href="#dealing-with-phased-mixed-calls"></a>
+</h3>
+<p>Finally, imagine the same data as before, but now the mixed haplotype
+is encoded as phased information:</p>
+<table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
+<thead><tr>
+<th style="text-align:left;">
+study_key
+</th>
+<th style="text-align:left;">
+survey_key
+</th>
+<th style="text-align:left;">
+variant_string
+</th>
+<th style="text-align:right;">
+variant_num
+</th>
+<th style="text-align:right;">
+total_num
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+study_03
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CVIET
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+study_03
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CVMNK
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+study_03
+</td>
+<td style="text-align:left;">
+survey_01
+</td>
+<td style="text-align:left;">
+crt:72_73_74_75_76:CV_I|M_E|N_T|K
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+</tbody>
+</table>
+<p>The mixtures are now clearly specified as a combination of the CVIET
+and CVMNK haplotypes. If our target is
+<code>crt:72_73_74_75_76:CVMNK</code> as before, this is now an
+unambiguous match against the second and third rows, giving prevalence =
+(40 + 10) / 100 = 50%. This is one argument for including phased data
+wherever possible, although in reality it can be challenging to reliably
+phase genomes.</p>
+<p>More complex situations, such as partial phasing or more than two
+alleles at a locus, are allowed - see the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring package
+documentation</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="old-stuff">(Old stuff)<a class="anchor" aria-label="anchor" href="#old-stuff"></a>
+</h3>
+<p>Prevalence calculation is through the function
+<code>get_prevalence()</code>. It returns the prevalence point estimate
+(%) along with lower and upper 95% CIs. It does this for every study in
+the loaded data, and returns results appended together over the
+<em>Studies</em> and <em>Surveys</em> table. An example is given below;
+scroll to the right to see the prevalence estimates:</p>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
+<thead><tr>
+<th style="text-align:left;">
+study_id
+</th>
+<th style="text-align:left;">
+study_name
+</th>
+<th style="text-align:left;">
+study_type
+</th>
+<th style="text-align:left;">
+authors
+</th>
+<th style="text-align:left;">
+publication_year
+</th>
+<th style="text-align:left;">
+url
+</th>
+<th style="text-align:left;">
+survey_id
+</th>
+<th style="text-align:left;">
+country_name
+</th>
+<th style="text-align:left;">
+site_name
+</th>
+<th style="text-align:right;">
+latitude
+</th>
+<th style="text-align:right;">
+longitude
+</th>
+<th style="text-align:left;">
+spatial_notes
+</th>
+<th style="text-align:left;">
+collection_start
+</th>
+<th style="text-align:left;">
+collection_end
+</th>
+<th style="text-align:left;">
+collection_day
+</th>
+<th style="text-align:left;">
+time_notes
+</th>
+<th style="text-align:right;">
+numerator
+</th>
+<th style="text-align:right;">
+denominator
+</th>
+<th style="text-align:right;">
+prevalence
+</th>
+<th style="text-align:right;">
+prevalence_lower
+</th>
+<th style="text-align:right;">
+prevalence_upper
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+study_01
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+other
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+example_data
+</td>
+<td style="text-align:left;">
+site_01
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+example data
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2020-01-01
+</td>
+<td style="text-align:left;">
+example data
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+6.831146
+</td>
+<td style="text-align:right;">
+40.70374
+</td>
+</tr></tbody>
+</table>
+</div>
+<hr>
+<p>By now, you should have a good idea for how STAVE works. Jump to the
+<a href="articles/installation.html">Installation</a> and <a href="articles/reading_in_data.html">Tutorials</a> sections to start
+putting some of these ideas into practice.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

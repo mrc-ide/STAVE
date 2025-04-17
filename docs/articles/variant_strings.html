@@ -90,34 +90,170 @@
 
     
     
+<p>Storing genetic information presents unique challenges, particularly
+when dealing with varying levels of detail reported by different
+sources. For instance, some academic studies may only provide aggregate
+counts of specific amino acids observed at a single locus, whereas
+others might supply raw sequence data at the individual level, allowing
+us to perform our own aggregation. To address these differences, we need
+a data format that is both versatile and robust.</p>
+<p>The solution in STAVE is a character string format that adheres to
+strict rules. While this approach may not be the most efficient for data
+compression, this trade-off is less significant when working with
+aggregate data, where the number of distinct observations is
+limited.</p>
+<p>This page explains the variant string format in detail, providing
+clear examples of both compatible and incompatible data types.</p>
 <div class="section level3">
-<h3 id="flexible-encoding-genetic-variants">3. Flexible encoding genetic variants<a class="anchor" aria-label="anchor" href="#flexible-encoding-genetic-variants"></a>
+<h3 id="gene-name-locus-and-amino-acid-are-separated-by">1. Gene name, locus, and amino acid are separated by ;<a class="anchor" aria-label="anchor" href="#gene-name-locus-and-amino-acid-are-separated-by"></a>
 </h3>
-<p>Encoding <em>Plasmodium</em> genetic data can be challenging due to
-the complexity and variability of the information involved. Sequence
-data may be recorded at the single-codon level or across multiple
-codons, and heterozygous calls — where more than one allele is observed
-— can occur at some codons but not others. These heterozygous calls may
-also be phased or unphased, adding another layer of detail. Furthermore,
-patterns of missingness can vary between individuals, causing the
-denominator to vary as we look along the genome. In many cases,
-particularly when working with aggregate counts extracted from published
-studies, some of this detailed information may be incomplete or entirely
-unavailable. Therefore, we require an encoding system that is both
-flexible and expressive: capable of capturing this complexity when the
-data are available, but not overly restrictive in situations where
-certain aspects are missing.</p>
-<p>A drawback of this flexible encoding is that calculating prevalence
-becomes less straightforward. This trade-off is somewhat unavoidable, as
-flexibility in data encoding and simplicity in prevalence calculation
-are somewhat opposing goals. In STAVE, we prioritize achieving a clean
-and flexible data structure, ensuring that all relevant information is
-captured. Prevalence calculations are then performed using dedicated
-member functions that operate on the encoded data.</p>
-<p>The <a href="articles/calculating_prevalence.html">next page</a> goes
-into how to calculate prevalence.</p>
+<p>These are the three key elements. For example, the string
+<em>pfk13;580;Y</em> specifies that in the <em>pfk13</em> gene (the
+kelch 13 gene, implicated in Artemisinin resistance) at the 580th codon
+position, we observed the amino acid Y. Amino acids must follow the <a href="https://megasoftware.net/web_help_11/IUPAC_Single_Letter_Codes.htm" class="external-link">IUPAC
+single-letter format</a>, in this case Y corresponds to Tyrosine.</p>
+<p>Another common notation would call this the <em>C580Y</em> variant.
+We refrain from this notation because:</p>
+<ol style="list-style-type: decimal">
+<li>This notation does not scale well to multiple loci.</li>
+<li>Sources do not always report the wild type (Cysteine in this case),
+forcing us to do extra work tracking down the reference genome.</li>
+<li>Strictly, we cannot assume that all non-numerator observations are
+wild type. The denominator may include all other variants, in which case
+recording these as wild type would be a corruption of the original
+data.</li>
+</ol>
+<p>Gene names must consist solely of lowercase English letters and
+digits (0-9), without hyphens or other special characters. Otherwise,
+they do not follow a strict convention. We recognise that this creates
+the potential for ambiguity, for example if two sources use slightly
+different names for the same gene, such as <em>pfk13</em> and
+<em>k13</em>. However, this can be avoided by manually listing all gene
+names in the existing data using the <code>get_variants()</code>
+function before appending new data.</p>
 </div>
-  </main>
+<div class="section level3">
+<h3 id="loci-are-separated-by-_">2. Loci are separated by _<a class="anchor" aria-label="anchor" href="#loci-are-separated-by-_"></a>
+</h3>
+<p>In some cases, sources may report variants over multiple loci. A good
+example is the <em>pfcrt</em> gene, implicated in resistance to
+Amodiaquine among other antimalarials, in which different haplotypes
+confer different degrees of resistance. Here, the variant string
+<em>pfcrt;72_73_74_75_76;C_V_I_E_T</em> specifies that at codon 72 we
+observed a C (Cysteine), at codon 73 we observed a V (Valine), etc.</p>
+<p>In a more concise shorthand notation, the underscores between amino
+acids can be omitted, resulting in <em>pfcrt;72_73_74_75_76;CVIET</em>.
+However, it is essential to retain the underscores between codon
+positions to prevent ambiguity in the numbers.</p>
+<p>When a data source provides a full haplotype, you should
+<strong>always store the haplotype as a whole</strong>. Do not manually
+break this down into individual loci, for example one entry for
+<em>pfcrt;72;C</em>, then a separate entry for <em>pfcrt;73;V</em> etc.
+When calculating prevalence, STAVE is smart enough to know that the
+<em>pfcrt;72;C</em> variant is contained within the
+<em>pfcrt;72_73_74_75_76;CVIET</em> haplotype. Even more importantly,
+<strong>do not store both the haplotype and the single locus
+information</strong>, as this will lead to mistakes in prevalence
+calculation due to double-counting. A more detailed explanation of this
+issue, along with guidance on handling very long haplotypes derived from
+raw sequence data, is provided on the <a href="articles/calculating_prevalence.html">next page</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="genes-are-separated-by">3. Genes are separated by :<a class="anchor" aria-label="anchor" href="#genes-are-separated-by"></a>
+</h3>
+<p>We may want to capture information about mutations observed together
+across multiple genes. A key example is the antimalarial combination
+therapy sulfadoxine-pyrimethamine (SP), where resistance arises from
+mutations in two genes:</p>
+<ul>
+<li>Mutations in the <em>pfdhfr</em> gene reduce the parasite’s
+susceptibility to pyrimethamine.</li>
+<li>Mutations in the <em>pfdhps</em> gene reduce susceptibility to
+sulfadoxine.</li>
+</ul>
+<p>This can be represented in the variant string format by listing
+multiple genes separated by a colon. For example:
+<em>pfdhfr;51;I:pfdhps;437;G</em>.</p>
+<p>The order in which genes are listed does not matter, as STAVE will
+automatically sort them before calculating prevalence. Additionally,
+there is no restriction on the number of genes that can be included in a
+single variant string.</p>
+</div>
+<div class="section level3">
+<h3 id="unphased-mixed-calls-are-indicated-by">4. Unphased mixed calls are indicated by /<a class="anchor" aria-label="anchor" href="#unphased-mixed-calls-are-indicated-by"></a>
+</h3>
+<p>Polyclonal infections are common in malaria and can result in mixed,
+or “heterozygous,” calls at the DNA level. In some cases, these mixed
+calls also manifest at the amino acid level. When this occurs, all
+observed amino acids should be listed, separated by a forward slash.</p>
+<p>For example, the string <em>pfmdr1;76;N/Y</em> indicates that in the
+<em>pfmdr1</em> gene at codon position 76, both N (Asparagine) and Y
+(Tyrosine) were observed.</p>
+<p>Any number of alleles can be listed, such as
+<em>pfmdr1;76;N/Y/F</em>, indicating three amino acids — N, Y, and F
+(Phenylalanine) — were detected at position 76. These mixed calls can
+also be incorporated into multi-locus notation. For instance,
+<em>pfmdr1;76_184;N/Y_Y</em> specifies a heterozygous call at position
+76 (N/Y) and a homozygous call at position 184 (Y).</p>
+</div>
+<div class="section level3">
+<h3 id="phased-mixed-calls-are-indicated-by">5. Phased mixed calls are indicated by |<a class="anchor" aria-label="anchor" href="#phased-mixed-calls-are-indicated-by"></a>
+</h3>
+<p>The forward slash notation assumes that variants are unphased,
+meaning we do not know which variants go together. For example, in the
+string <em>pfmdr1;76_184;N/Y_Y/F</em> we do not know if this is caused
+by the haplotype combination <em>N_Y</em> + <em>Y_F</em>, or the
+combination <em>N_F</em> + <em>Y_Y</em>. There could also be more than
+two genotypes present in the sample, in which case more combinations are
+possible.</p>
+<p>In some cases, we may have phased information, meaning we know which
+variants go together. These can be indicated using the vertical bar
+symbol in place of the forward slash. When using this notation, the
+first letter listed at a locus always goes with the first letter at
+another locus, etc. For example, <em>pfmdr1;76_184;N|Y_Y|F</em>
+indicates the haplotype combination <em>N_Y</em> + <em>Y_F</em>.</p>
+<p>Any number of alleles can be listed, but the same number of alleles
+must be present at all heterozygous loci. For example, if we have
+observed three distinct amino acids at position 76 and two distinct
+amino acids at position 184, then we must list three amino acids at
+locus 184 even if this means repeating the same letter. Otherwise it
+would not be possible to link up which amino acids go together.</p>
+<p>There are some limitations to this format. For example, phased and
+unphased regions are not currently supported in the same variant.
+Similarly, partial phasing is not supported, by which we mean samples
+with more than two genomes where a only subset of genomes are phased
+together. As a rule of thumb, remember that <strong>the / and | symbols
+cannot be used together</strong>. While we recognise this as a
+limitation of the format, these are relatively rare edge cases. They
+will also not tend to impact prevalence calculation unless we are
+interested in the prevalence of a long haplotype. In both cases above,
+data can still be included in STAVE format with some information loss,
+for example by treating all loci as unphased.</p>
+</div>
+<div class="section level3">
+<h3 id="what-cannot-be-encoded">What cannot be encoded?<a class="anchor" aria-label="anchor" href="#what-cannot-be-encoded"></a>
+</h3>
+<p>As with any data format, there are inherent trade-offs in the variant
+string encoding. The following information <strong>cannot</strong> be
+encoded:</p>
+<ul>
+<li>Copy number variation</li>
+<li>More complex genomic rearrangements, including insertions and
+deletions</li>
+<li>Combinations of phased and unphased regions and partial phasing (see
+above)</li>
+<li>Within-sample allele frequencies</li>
+<li>Quality scores</li>
+</ul>
+<p>Keep in mind that STAVE is designed to facilitate data extraction
+from diverse sources for the purposes of prevalence calculation. It is
+not intended to replace individual-level data or raw sequence data,
+which remain essential for other types of analyses.</p>
+<p>The <a href="articles/calculating_prevalence.html">next page</a>
+explains how prevalence is calculated from this encoding.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
