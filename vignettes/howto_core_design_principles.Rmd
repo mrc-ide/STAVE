@@ -1,0 +1,74 @@
+---
+title: "Core Design Principles"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Core Design Principles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+```
+
+There are always trade-offs when deciding how to store data. Different formats prioritise different things — human readability, compact file size, speed of access, ease of sharing, etc. No single approach optimises all of these at once. Where we choose to land depends on the overall design philosophy and what we need the data to support.
+
+STAVE was developed because existing formats in malaria molecular surveillance (MMS) are not ideally suited to estimating the prevalence of non-synonymous mutations or handling the spatial–temporal complexity of metadata. Here we describe the specific issues that STAVE is designed to address, which form the motivations behind our design choices.
+
+### Linkage of genetic data to precise space-time coordinates
+
+Genetic data are often linked to places using descriptive fields like the country name, the name of an administrative area, or a “site” name. This is flexible, but it brings a lot of ambiguity. A site might mean a clinic, a village, a district, or something else entirely, and different contributors rarely use the term in the same way. This makes it hard to compare data across studies and can result in mixed levels of spatial granularity within a single dataset.
+
+Using free-text location names is also unreliable. Take Côte d’Ivoire: it might appear as Ivory Coast, Cote d’Ivoire, Côte d’Ivoire, Republic of Côte d’Ivoire, and many other variations that look almost identical. These small differences can stop datasets from joining cleanly, for example when grouping by country, and are a common source of accidental data duplication.
+
+Many projects try to avoid this by using country or administrative codes such as ISO-2, ISO-3, or GADM IDs. This helps, but it introduces a new problem: administrative boundaries and codes are not stable over time. Countries split, rename, or merge; administrative units are redrawn; and every coding system forces the data provider to choose one particular version. This means the codes themselves can become a source of inconsistency unless the chosen boundary set is carefully documented and version-controlled.
+
+Time information can be just as messy. Some datasets only record a sampling year, which can mask interesting patterns in places with strong seasonality. Others describe time in vague terms like “mid-2014” or “rainy season”, which leaves too much room for interpretation.
+
+STAVE takes a deliberately strict approach to these issues by requiring precise spatial coordinates (latitude and longitude) and a specific day of collection for every survey. Although this may seem rigid, it simply reflects reality: **each sampling event occurs at a single place and time** - the ambiguity comes from how data are recorded, not from the sampling itself. By insisting on explicit spatial and temporal anchors, **STAVE makes a clean separation between data recording and the administrative or interpretive layers that sit on top of it**. Country or administrative boundaries can always be derived later by intersecting coordinates with a version-controlled shapefile.
+
+The main downside of this approach is that it sometimes requires imputing spatial or temporal information when the original data are vague or incomplete. STAVE accepts this trade-off: having precise coordinates and dates resolves at least as many problems as imputation introduces. To support this, STAVE includes free-text fields where users can document how any spatial or temporal values were inferred. Even when the imputation is coarse — for example, taking the midpoint of a reported sampling range — it creates a transparent record of how locations and dates were determined. This explicitness helps maintain data provenance and motivates users to obtain the most accurate raw information available.
+
+### Flexible encoding of haplotypes
+
+Existing approaches to encoding non-synonymous mutations, i.e. those that change the amino acid code, each solve part of the problem but none fully meet the needs of MMS. The de-facto shorthand — such as N86Y for single codons or CVMNK for *pfcrt* haplotypes — is wonderfully compact and easy to write, but provides no consistent rules for representing mixed or phased calls, and different groups often improvise their own conventions.
+
+At the other extreme, formats like [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) and standards such as [HGVS](https://hgvs-nomenclature.org/stable/background/simple/) and [GA4GH VRS](https://www.ga4gh.org/product/variation-representation/) offer highly structured, rigorous ways to describe alleles, haplotypes, and genotypes, including heterozygosity and phasing at the DNA level. However, these are designed for individual-level, nucleotide-resolved data and become either irrelevant (e.g. phasing differences that collapse to the same amino acid) or extremely verbose when applied to the short haplotypes often found in MMS.
+
+There is a clear gap for something in between: a lightweight, human-readable encoding that is still rich enough to capture features needed for prevalence estimation. This was the motivation behind developing the [variantstring](https://github.com/mrc-ide/variantstring) format: a compact, human-readable way to encode amino-acid variation that sits between informal shorthand like CVMNK and heavyweight standards like HGVS or VRS.
+
+For example, a simple *pfcrt* haplotype can be written as
+```
+pfcrt:72-76:CVIET
+```
+and an unphased mixture of the CVIET and CVMNK haplotypes can be written as
+```
+pfcrt:72-76:C_V_I/M_E/N_T/K
+```
+This is short enough to be manually entered if needed - for example when extracting data from academic publications - while also containing rich information on ambiguities.
+
+For aggregated count data, each variantstring can be paired with a numerator (the number of samples in which that variant appears) and a denominator (the number of samples successfully sequenced at the relevant loci). Once encoded in this way, STAVE can compute the prevalence of any subset of a haplotype — for example, just codon 76 of *pfcrt*, or codons 72–75 excluding 76 — by checking which samples have unambiguous information over exactly those positions. For example, in the unphased mixture shown above, we cannot assert the presence of the CVIET haplotype itself, but we can say that codon 74 contains both the `I` and `M` alleles.
+
+By separating the **encoding** of the genetic information from the **prevalence** of a variant, we maintain flexibility and rigour.
+
+### Relational structure
+
+Aggregated genetic data rarely live comfortably in a single flat table. Instead, they involve several distinct layers: study-level context (who generated the data and why), survey-level context (where and when samples were collected), and the genetic measurements themselves. If these layers are mixed together it leads to redundant information being entered multiple times, which bloats file sizes and creates opportunities for data entry mistakes. A simple relational structure helps avoid these problems by separating concerns: **each kind of information is stored once, in the place where it naturally belongs, and other tables link back to it.**
+
+STAVE uses a three-table relational layout built around this idea: studies, surveys, and counts.
+
+- **The studies table** holds a stable identifier (the `study_id`), and contains information about the data provenance. Several studies may share the same reference (e.g. URL), and some may represent internal or unpublished work. The key point is that every survey and every set of counts can be traced back to a study identifier that summarises “what dataset this belongs to”.
+- **The surveys table** holds a stable identifier (the `survey_id`), and represents the unit of sampling in space and time. A survey is defined as a single sampling event (or tightly bounded collection period) at a specific location. In STAVE, this is anchored by latitude, longitude, and a collection day, with optional start/end dates and free-text notes for any spatial or temporal imputation. Each survey links to exactly one `study_id`.
+- **The counts table** stores the genetic measurements, linking each observed variant to exactly one `survey_id`. Each row contains a *variantstring* of the observed haplotype, and the associated numerator and denominator. This is where the aggregated information about non-synonymous mutations lives, but always in the context of a specific survey and study.
+
+---
+
+The [next few pages](articles/studies_table.html) go into the specific formatting requirements of each of these three linked tables. If you prefer to get stuck into code, the [tutorials](articles/reading_in_data.html) use an example dataset that comes pre-loaded with STAVE.
+

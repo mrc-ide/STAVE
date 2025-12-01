@@ -1,0 +1,100 @@
+---
+title: "Calculating Prevalence"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculating Prevalence}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+This tutorial covers the following topics:
+
+- Calculating prevalence at a single locus
+- Calculating prevalence at multiple loci and dealing with ambiguities
+
+## Calculating prevalence
+
+We begin by creating a new STAVE object and appending the example data:
+
+```{r}
+# create new object
+s <- STAVE_object$new()
+
+# append example data
+s$append_data(studies_dataframe = example_input$studies,
+              surveys_dataframe = example_input$surveys,
+              counts_dataframe = example_input$counts)
+```
+
+Before calculating prevalence, it is often useful to inspect the set of variants encoded in the object:
+
+```{r}
+s$get_variants()
+```
+
+By default, `get_variants()` lists single-locus variants (`report_haplo = FALSE`).
+If you instead want to see all multi-locus haplotypes, set:
+
+```{r}
+s$get_variants(report_haplo = TRUE)
+```
+
+### Prevalence at a single locus
+
+To calculate the prevalence of a specific variant, use `get_prevalence()`. For example, here is the prevalence of the mutation `crt:76:T`:
+
+```{r, eval=FALSE}
+s$get_prevalence(target_variant = "crt:76:T")
+```
+
+```{r, echo=FALSE}
+s$get_prevalence("crt:76:T") |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+The output is a joined table containing study, survey, and count information, as well as the estimated prevalence and its 95% confidence interval for each survey.
+
+Note that a row is returned for every loaded survey, even when the denominator is zero.
+To return only surveys with non-zero denominators, use:
+
+```{r, eval=FALSE}
+s$get_prevalence(target_variant = "crt:76:T", return_full = FALSE)
+```
+
+```{r, echo=FALSE}
+s$get_prevalence("crt:76:T", return_full = FALSE) |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+### Prevalence of a haploype, and ambiguous matches
+
+Here is another example, this time allowing for ambiguous matches. 
+
+```{r, eval=FALSE}
+s$get_prevalence("crt:76:T", keep_ambiguous = TRUE, prev_from_min = TRUE)
+```
+
+```{r, echo=FALSE}
+s$get_prevalence("crt:76:T", keep_ambiguous = TRUE, prev_from_min = TRUE) |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+A `min` and `max` numerator are now given. In this example there is no ambiguity as we are calculating prevalence at a single locus, but for longer haplotypes the `min` and `max` can differ. The prevalence and 95% CI calculated using either the `min` or the `max` values, specified by the `prev_from_min` argument.
+

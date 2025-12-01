@@ -12,7 +12,10 @@ test_that("test that fails when appending data that clashes with existing preloa
     
     # preload correct data
     preload_studies <- readxl::read_xlsx(preload_path, sheet = "studies")
-    preload_surveys <- readxl::read_xlsx(preload_path, sheet = "surveys")
+    preload_surveys <- readxl::read_xlsx(preload_path, sheet = "surveys") |>
+      mutate(collection_start = as.Date(collection_start),
+             collection_end = as.Date(collection_end),
+             collection_day = as.Date(collection_day))
     preload_counts <- readxl::read_xlsx(preload_path, sheet = "counts")
     
     z <- STAVE_object$new()
@@ -23,7 +26,10 @@ test_that("test that fails when appending data that clashes with existing preloa
     
     # try to append bad data
     input_studies <- readxl::read_xlsx(file_path, sheet = "studies")
-    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys")
+    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys") |>
+      mutate(collection_start = as.Date(collection_start),
+             collection_end = as.Date(collection_end),
+             collection_day = as.Date(collection_day))
     input_counts <- readxl::read_xlsx(file_path, sheet = "counts")
     
     z$append_data(studies_dataframe = input_studies,

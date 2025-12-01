@@ -9,7 +9,10 @@ test_that("tests of failing to load bad data due to structural problems", {
     folder_path <- system.file("extdata", "structure_tests", package = "STAVE")
     file_path <- sprintf("%s/%s.xlsx", folder_path, file_list[i])
     input_studies <- readxl::read_xlsx(file_path, sheet = "studies")
-    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys")
+    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys") |>
+      mutate(collection_start = as.Date(collection_start),
+             collection_end = as.Date(collection_end),
+             collection_day = as.Date(collection_day))
     input_counts <- readxl::read_xlsx(file_path, sheet = "counts")
     
     z <- STAVE_object$new()
@@ -32,7 +35,10 @@ test_that("tests of successfully loading data even when there is complex structu
     folder_path <- system.file("extdata", "structure_tests", package = "STAVE")
     file_path <- sprintf("%s/%s.xlsx", folder_path, file_list[i])
     input_studies <- readxl::read_xlsx(file_path, sheet = "studies")
-    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys")
+    input_surveys <- readxl::read_xlsx(file_path, sheet = "surveys") |>
+      mutate(collection_start = as.Date(collection_start),
+             collection_end = as.Date(collection_end),
+             collection_day = as.Date(collection_day))
     input_counts <- readxl::read_xlsx(file_path, sheet = "counts")
     
     z <- STAVE_object$new()

@@ -1,0 +1,7 @@
+study_id,survey_id,country_name,site_name,latitude,longitude,location_method,location_notes,collection_start,collection_end,collection_day,time_method,time_notes
+Dama_2017,Dama_2017_Bamako_2014,Mali,Koulikoro,12.6129,-8.1356,WWARN lat and long,NA,1/1/14,12/31/14,7/2/14,automated midpoint,NA
+Asua_2019,Asua_2019_Agago_2017,Uganda,Agago,2.984721899,33.33055496,WWARN lat and long,NA,1/1/17,12/31/17,7/2/17,automated midpoint,NA
+Asua_2019,Asua_2019_Arua_2017,Uganda,Arua,3.029999971,30.90999985,WWARN lat and long,NA,1/1/17,12/31/17,7/2/17,automated midpoint,NA
+Asua_2019,Asua_2019_Kole_2017,Uganda,Kole,2.42861104,32.80110931,WWARN lat and long,NA,1/1/17,12/31/17,7/2/17,automated midpoint,NA
+Asua_2019,Asua_2019_Lamwo_2017,Uganda,Lamwo,3.533333063,32.79999924,WWARN lat and long,NA,1/1/17,12/31/17,7/2/17,automated midpoint,NA
+Asua_2019,Asua_2019_Mubende_2017,Uganda,Mubende,0.557500005,31.39500046,WWARN lat and long,NA,1/1/17,12/31/17,7/2/17,automated midpoint,NA

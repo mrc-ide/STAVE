@@ -27,10 +27,10 @@ You can install the most recent version of STAVE using:
 devtools::install_github("mrc-ide/STAVE")
 ```
 
-It is good practice to specify a version number to ensure future users have exactly the same version loaded. To install a specific version you can use the following format:
+It is good practice to specify a version number to ensure your scripts will run even if the package changes over time (backward-compatibility is not guaranteed). To install a specific version you can use the following format:
 
 ``` r
-devtools::install_github("mrc-ide/STAVE@v1.1.0")
+devtools::install_github("mrc-ide/STAVE@v2.0.0")
 ```
 
-see [here](https://github.com/mrc-ide/STAVE) for the latest version number.
+see the "Tags" section of the [main Github page](https://github.com/mrc-ide/STAVE) for the latest version number.

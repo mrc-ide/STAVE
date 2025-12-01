@@ -28,6 +28,6 @@ STAVE is an R package with three basic functionalities:
 All documentation, including installation instructions and tutorials,
 can be found on [the STAVE website](https://mrc-ide.github.io/STAVE/).
 
-# Version History
-
-The current version of the software is 1.1.0, released 17 Apr 2025.
+See the tagged versions for the latest release, and please refer to a
+specific tag when installing (i.e. `@v1.1.0`) to avoid issues with
+backward incompatibility.
