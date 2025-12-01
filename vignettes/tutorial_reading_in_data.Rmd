@@ -1,0 +1,118 @@
+---
+title: "Reading in Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reading in Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+This tutorial covers the following topics:
+
+- Creating a new STAVE object
+- Loading data into this object
+- Viewing the loaded data
+- Dropping studies and surveys by ID
+
+## Reading in data
+
+STAVE works via a single class (an R6 object) that acts as the main data container.
+This class allows users to efficiently import, store, and manipulate
+data via specialized member functions.
+
+A new object can be created and data read in like this:
+
+```{r}
+# create new object
+s <- STAVE_object$new()
+
+# append data using a member function
+s$append_data(studies_dataframe = example_input$studies,
+              surveys_dataframe = example_input$surveys,
+              counts_dataframe = example_input$counts)
+```
+
+The default print method tells us how many studies and surveys are loaded:
+
+```{r}
+s
+```
+
+This example uses the `example_input` object that comes pre-loaded with the
+package - have a look at this object to get a feel for the required input format (and see the rest of this package documentation for a rigorous specification).
+
+Using a custom class offers several key advantages. Once loaded, all data remain
+consolidated within a single object, avoiding fragmentation. The class structure
+also ensures the data are *encapsulated*, meaning they cannot be directly edited
+by the user. This built-in protection minimizes the risk of accidental data
+corruption.
+
+We can view the loaded tables using `get` functions:
+
+```{r, eval=FALSE}
+s$get_studies()
+```
+
+```{r, echo=FALSE}
+s$get_studies() |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+```{r, eval=FALSE}
+s$get_surveys()
+```
+
+```{r, echo=FALSE}
+s$get_surveys() |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+```{r, eval=FALSE}
+s$get_counts()
+```
+
+```{r, echo=FALSE}
+s$get_counts() |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+However, we cannot directly modify the data in these tables. Instead, we have to drop studies and surveys using member functions.
+
+## Dropping studies and surveys
+
+Imagine we are not interested in the study by Dama et al. (2017), and want to drop it from our analysis. We can do so via the `study_id`:
+
+```{r}
+s$drop_study("Dama_2017")
+```
+
+Similarly, we may want to drop a specific survey - for example the `Asua_2019_Agago_2017` survey:
+
+```{r}
+s$drop_survey("Asua_2019_Agago_2017")
+```
+
+Looking at the STAVE object, we can see that we have reduced the size of the data:
+
+```{r}
+s
+```
+
+

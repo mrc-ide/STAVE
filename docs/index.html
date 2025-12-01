@@ -11,7 +11,8 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Spatial-Temporal Aggregated Variant Encoding">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<meta property="og:title" content="Spatial-Temporal Aggregated Variant Encoding">
 <meta property="og:description" content="STAVE is an R package for storing and managing aggregate spatial-temporal genetic data. Data are stored at the aggregate level (numerator and denominator) rather than at the individual level. STAVE centres around one main class; data are read into this class, and all data manipulation (e.g. calculating prevalence) takes place using member functions. Although STAVE is designed with *Plasmodium* genetic data in mind, it could be used to store genetic information from other organisms.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -26,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,10 +39,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
-    <a class="dropdown-item" href="articles/relational_structure.html">The relational data structure</a>
-    <a class="dropdown-item" href="articles/input_formats.html">Input formats</a>
-    <a class="dropdown-item" href="articles/variant_strings.html">Encoding genetic data</a>
-    <a class="dropdown-item" href="articles/calculating_prevalence.html">Calculating prevalence</a>
+    <a class="dropdown-item" href="articles/howto_core_design_principles.html">Core Design Principles</a>
+    <a class="dropdown-item" href="articles/howto_studies_table.html">The Studies Table</a>
+    <a class="dropdown-item" href="articles/howto_surveys_table.html">The Surveys Table</a>
+    <a class="dropdown-item" href="articles/howto_counts_table.html">The Counts Table</a>
+    <a class="dropdown-item" href="articles/howto_encoding_data.html">How To Encode Genetic Data</a>
+    <a class="dropdown-item" href="articles/howto_calculating_prevalence.html">Calculating prevalence</a>
+    <a class="dropdown-item" href="articles/howto_cautionary_notes.html">Cautionary Notes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -50,7 +54,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <a class="dropdown-item" href="articles/reading_in_data.html">Reading in data and calculating prevalence</a>
+    <a class="dropdown-item" href="articles/tutorial_reading_in_data.html">Reading in Data</a>
+    <a class="dropdown-item" href="articles/tutorial_calculating_prevalence.html">Calculating Prevalence</a>
   </div>
 </li>
 <li class="nav-item">
@@ -76,17 +81,34 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><p><img src="reference/figures/hex.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;"></p>
-<p>STAVE is a lightweight R package focused on a specific use case: working with aggregated genetic data for molecular surveillance. It provides three core functionalities:</p>
-<ol style="list-style-type: decimal">
+<p>STAVE stands for <strong>S</strong>patial-<strong>T</strong>emporal <strong>A</strong>ggregated <strong>V</strong>ariant <strong>E</strong>ncoding.</p>
+<p>It is a lightweight data schema for organising data commonly found in malaria molecular surveillance (MMS) - aggregate counts of non-synonymous mutations. STAVE provides a consistent way to link genetic measurements to precise space–time coordinates and to encode multi-locus haplotypes, even when mixtures or ambiguous calls are present. It also includes helper functions for estimating variant prevalence directly from the encoded data.</p>
+<div class="section level2">
+<h2 id="what-stave-is-designed-to-do">What STAVE is designed to do<a class="anchor" aria-label="anchor" href="#what-stave-is-designed-to-do"></a>
+</h2>
+<p>STAVE focuses on a small number of key tasks that commonly cause errors or inconsistencies in MMS workflows:</p>
+<ul>
 <li>
-<strong>Storage of aggregate genetic data using <a href="https://github.com/mrc-ide/variantstring" class="external-link">variant string format</a></strong>. STAVE encodes numerator/denominator-style data in a compact string representation tailored for amino acid-level variation. This format supports both single codons and multi-locus haplotypes, making it especially suitable for drug resistance markers.</li>
+<strong>Provide a simple, relational data structure</strong> for storing study metadata, survey-level space–time information, and aggregated genetic counts.</li>
 <li>
-<strong>Linkage of genetic data to precise space-time coordinates</strong>. Rather than relying on administrative names (which may be ambiguous or change over time), STAVE links each data point to specific geographic coordinates and timestamps, ensuring consistency across datasets.</li>
+<strong>Encode amino-acid haplotypes in a compact, human-readable format</strong> using the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring</a> format.</li>
 <li>
-<strong>Computation of prevalence from encoded data</strong>. Calculating prevalence isn’t always straightforward. For instance, the variant of interest may represent only a subset of a broader haplotype, or the data may include mixed (heterozygous) calls. STAVE handles these complexities with dedicated logic.</li>
-</ol>
-<p>STAVE is deliberately kept simple and focused. It’s designed to do just these three things—and to do them reliably. While it doesn’t cover everything (for example, it doesn’t deal with individual-level data or generate maps), it helps streamline one tricky part of working with genetic surveillance data. It’s intended to fit neatly into a broader workflow, making life a little easier for researchers working in this space.</p>
-<p>The <a href="articles/relational_structure.html">How it works</a> section describes the STAVE data format, which you will need to understand before importing data. Once you are ready, checkout the <a href="articles/installation.html">Installation</a> and <a href="articles/reading_in_data.html">Tutorials</a> sections for practical examples.</p>
+<strong>Support robust prevalence estimation</strong>, even when variants represent subsets of longer haplotypes or when mixed calls introduce uncertainty.</li>
+</ul>
+<p>STAVE is deliberately minimal: it does not attempt to handle individual-level data, nucleotide-level data, or downstream spatial modelling. Instead, it aims to slot cleanly into broader analysis workflows by providing a reliable and unambiguous foundation on which those steps can build.</p>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>To learn how the STAVE data structure works, see <a href="articles/core_design_principles.html">How it works</a>.</p>
+<p>When you’re ready, visit:</p>
+<ul>
+<li>
+<a href="articles/installation.html">Installation</a> – how to install the package</li>
+<li>
+<a href="articles/reading_in_data.html">Tutorials</a> – practical examples of common tasks</li>
+</ul>
+</div>
 
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>

@@ -2,11 +2,15 @@ pandoc: 3.6.3
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  calculating_prevalence: calculating_prevalence.html
-  counts_format: counts_format.html
-  input_formats: input_formats.html
+  howto_calculating_prevalence: howto_calculating_prevalence.html
+  howto_cautionary_notes: howto_cautionary_notes.html
+  howto_core_design_principles: howto_core_design_principles.html
+  howto_counts_table: howto_counts_table.html
+  howto_encoding_data: howto_encoding_data.html
+  howto_studies_table: howto_studies_table.html
+  howto_surveys_table: howto_surveys_table.html
   installation: installation.html
-  reading_in_data: reading_in_data.html
-  relational_structure: relational_structure.html
-last_built: 2025-04-17T13:46Z
+  tutorial_calculating_prevalence: tutorial_calculating_prevalence.html
+  tutorial_reading_in_data: tutorial_reading_in_data.html
+last_built: 2025-12-01T13:47Z
 

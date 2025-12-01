@@ -1,0 +1,88 @@
+---
+title: "The Counts Table"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Counts Table}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+The final table is the *Counts* table, which stores the genetic information. An example of a correctly formatted *Counts* table is given below:
+
+```{r, echo=FALSE}
+example_input$counts |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+<br>
+
+<a href="https://raw.githubusercontent.com/mrc-ide/STAVE/main/inst/extdata/vignettes/counts_example.csv" 
+   class="btn" 
+   style="
+     display:inline-block;
+     padding:8px 14px;
+     background-color:#0366d6;
+     color:white !important;
+     border-radius:6px;
+     text-decoration:none;
+     font-weight:600;
+     ">
+  ⬇️ Download as CSV
+</a>
+
+---
+
+## Fields and requirements
+
+Mandatory fields are shown in blue.
+
+```{r, echo=FALSE}
+
+rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background = "#0366d6"),
+                      Type = "Character string",
+                      Notes = "The foreign key for this study, pointing back to the <i>Studies</i> table."),
+                 list(Column = cell_spec("survey_id", color = "white", background = "#0366d6"),
+                      Type = "Character string",
+                      Notes = "The foreign key for this survey, pointing back to the <i>Surveys</i> table."),
+                 list(Column = cell_spec("variant_string", color = "white", background = "#0366d6"),
+                      Type = "Character string. A valid <i>variantstring</i>",
+                      Notes = "A single- or multi-locus haplotype."),
+                 list(Column = cell_spec("variant_num", color = "white", background = "#0366d6"),
+                      Type = "Numeric integer",
+                      Notes = "The number of samples within which this variant was observed."),
+                 list(Column = cell_spec("total_num", color = "white", background = "#0366d6"),
+                      Type = "Numeric integer",
+                      Notes = "The total number of samples successfully sequenced at this subset of loci. In other words, the number of samples that <i>could have produced</i> the observed variant.")) |>
+  kbl(dformat = "html", escape = FALSE) |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1, width = "100px", border_left = "1px solid #ccc", border_right = "1px solid #ccc") |>
+  column_spec(2, width = "150px", border_right = "1px solid #ccc") |>
+  column_spec(3, border_right = "1px solid #ccc")
+```
+
+---
+
+## *variantstring* format
+
+The *variantstring* format is defined in the [*variantstring*](https://github.com/mrc-ide/variantstring) package - refer to that package documentation for details. The current version of STAVE uses *variantstring* v1.8.3.
+
+---
+
+The [next page](articles/counts_format.html) demonstrates some of the nuances of encoding genetic data.

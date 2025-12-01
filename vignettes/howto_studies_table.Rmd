@@ -1,0 +1,99 @@
+---
+title: "The Studies Table"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Studies Table}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(STAVE)
+if (requireNamespace("kableExtra", quietly = TRUE)) {
+    library(kableExtra)
+}
+```
+
+This table captures information about the provenance of the data. An example of a correctly formatted *Studies* table is given below (scroll too see the whole table):
+
+```{r, echo=FALSE}
+example_input$studies |>
+  kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
+  kable_styling(bootstrap_options = c("hover", "condensed"), 
+                full_width = TRUE) |>
+  scroll_box(width = "100%", height = NULL)
+```
+
+<br>
+
+<a href="https://raw.githubusercontent.com/mrc-ide/STAVE/main/inst/extdata/vignettes/studies_example.csv" 
+   class="btn" 
+   style="
+     display:inline-block;
+     padding:8px 14px;
+     background-color:#0366d6;
+     color:white !important;
+     border-radius:6px;
+     text-decoration:none;
+     font-weight:600;
+     ">
+  ⬇️ Download as CSV
+</a>
+
+---
+
+## Fields and requirements
+
+Mandatory fields are shown in blue.
+
+```{r, echo=FALSE}
+
+rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background = "#0366d6"),
+                      Type = "Character string. Must be a valid identifier (see below).",
+                      Notes = "The private key for this study."),
+                 list(Column = "study_label",
+                      Type = "Character string or `NA`",
+                      Notes = "A few words to identify the study, for example the title of an academic paper."),
+                 list(Column = "description",
+                      Type = "Character string or `NA`",
+                      Notes = "A longer space to describe any relevant study details (free text)."),
+                 list(Column = cell_spec("access_level", color = "white", background = "#0366d6"),
+                      Type = "Character string. One of {`'public'`, `'restricted'`, `'private'`}.",
+                      Notes = "The access level of the data. Private data are allowed, but it is down to the user to ensure the resulting STAVE object is not shared beyond those with permissions."),
+                 list(Column = "contributors",
+                      Type = "Character string or `NA`",
+                      Notes = "List of key contributors, for example authors of an academic paper."),
+                 list(Column = cell_spec("reference", color = "white", background = "#0366d6"),
+                      Type = "Character string",
+                      Notes = "A pointer that unambiguously defines the data source. For example a URL to a published paper, or for unpublished data a permanent path to the location where the data are stored. <b>This is one of the most important fields in maintaining data provenance - please complete it as best you can.</b>"),
+                 list(Column = "reference_year",
+                      Type = "Numeric or `NA`",
+                      Notes = "The calendar year of the source reference.")) |>
+  kbl(dformat = "html", escape = FALSE) |>
+  kable_styling(full_width = FALSE) |>
+  column_spec(1, width = "100px", border_left = "1px solid #ccc", border_right = "1px solid #ccc") |>
+  column_spec(2, width = "150px", border_right = "1px solid #ccc") |>
+  column_spec(3, border_right = "1px solid #ccc")
+```
+
+---
+
+## Valid identifiers
+
+All relational keys must be **valid identifiers**. This means they:
+
+- Contain only English letters (uppercase or lowercase), numbers (0-9), or underscores (_).
+- Do not begin with a number or an underscore.
+
+Beyond these restrictions, any naming convention can be used. However, it is recommended to adopt a systematic approach to avoid potential conflicts. For instance, using generic IDs like “study1” is not a good idea, as such IDs could overlap with those from other datasets (although STAVE will prevent you from appending a study with an ID matching an existing loaded study). A better approach is to use a concise, descriptive format, such as the first author’s surname and the year of publication for an academic paper, e.g., Bloggs_2024.
+
+---
+
+The [next page](articles/surveys_format.html) shows how to specify location and time data in the *Surveys* table.

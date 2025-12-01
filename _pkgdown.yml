@@ -2,26 +2,37 @@ url: ~
 template:
   bootstrap: 5
   bootswatch: simplex
+  assets:
+    css:
+      - extra.css
 
 navbar:
   title: DRpower
   left:
     - text: How it works
       menu:
-        - text: The relational data structure
-          href: articles/relational_structure.html
-        - text: Input formats
-          href: articles/input_formats.html
-        - text: Encoding genetic data
-          href: articles/variant_strings.html
+        - text: Core Design Principles
+          href: articles/howto_core_design_principles.html
+        - text: The Studies Table
+          href: articles/howto_studies_table.html
+        - text: The Surveys Table
+          href: articles/howto_surveys_table.html
+        - text: The Counts Table
+          href: articles/howto_counts_table.html
+        - text: How To Encode Genetic Data
+          href: articles/howto_encoding_data.html
         - text: Calculating prevalence
-          href: articles/calculating_prevalence.html
+          href: articles/howto_calculating_prevalence.html
+        - text: Cautionary Notes
+          href: articles/howto_cautionary_notes.html
     - text: Installation
       href: articles/installation.html
     - text: Tutorials
       menu:
-        - text: Reading in data and calculating prevalence
-          href: articles/reading_in_data.html
+        - text: Reading in Data
+          href: articles/tutorial_reading_in_data.html
+        - text: Calculating Prevalence
+          href: articles/tutorial_calculating_prevalence.html
 #        - text: Aggregating and mapping results
 #          href: articles/aggregating.html
     - text: Functions
