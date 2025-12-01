@@ -1,17 +1,26 @@
 
 <img src="reference/figures/hex.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;">
 
-STAVE is a lightweight R package focused on a specific use case: working with aggregated genetic data for molecular surveillance. It provides three core functionalities:
+STAVE stands for **S**patial-**T**emporal **A**ggregated **V**ariant **E**ncoding.
 
-1. **Storage of aggregate genetic data using [variant
-string format](https://github.com/mrc-ide/variantstring)**. STAVE encodes numerator/denominator-style data in a compact string representation tailored for amino acid-level variation. This format supports both single codons and multi-locus haplotypes, making it especially suitable for drug resistance markers.
-2. **Linkage of genetic data to precise space-time coordinates**. Rather than relying on administrative names (which may be ambiguous or change over time), STAVE links each data point to specific geographic coordinates and timestamps, ensuring consistency across datasets.
-3. **Computation of prevalence from encoded data**. Calculating prevalence isn’t always straightforward. For instance, the variant of interest may represent only a subset of a broader haplotype, or the data may include mixed (heterozygous) calls. STAVE handles these complexities with dedicated logic.
+It is a lightweight data schema for organising data commonly found in malaria molecular surveillance (MMS) - aggregate counts of non-synonymous mutations. STAVE provides a consistent way to link genetic measurements to precise space–time coordinates and to encode multi-locus haplotypes, even when mixtures or ambiguous calls are present. It also includes helper functions for estimating variant prevalence directly from the encoded data.
 
-STAVE is deliberately kept simple and focused. It’s designed to do just these three things—and to do them reliably. While it doesn’t cover everything (for example, it doesn’t deal with individual-level data or generate maps), it helps streamline one tricky part of working with genetic surveillance data. It’s intended to fit neatly into a broader workflow, making life a little easier for researchers working in this space.
+## What STAVE is designed to do
 
-The [How it works](articles/relational_structure.html) section describes the
-STAVE data format, which you will need to understand before importing data. Once
-you are ready, checkout the [Installation](articles/installation.html) and
-[Tutorials](articles/reading_in_data.html) sections for practical examples.
+STAVE focuses on a small number of key tasks that commonly cause errors or inconsistencies in MMS workflows:
+
+- **Provide a simple, relational data structure** for storing study metadata, survey-level space–time information, and aggregated genetic counts.
+- **Encode amino-acid haplotypes in a compact, human-readable format** using the [variantstring](https://github.com/mrc-ide/variantstring) format.
+- **Support robust prevalence estimation**, even when variants represent subsets of longer haplotypes or when mixed calls introduce uncertainty.
+
+STAVE is deliberately minimal: it does not attempt to handle individual-level data, nucleotide-level data, or downstream spatial modelling. Instead, it aims to slot cleanly into broader analysis workflows by providing a reliable and unambiguous foundation on which those steps can build.
+
+## Getting started
+
+To learn how the STAVE data structure works, see [How it works](articles/core_design_principles.html).
+
+When you’re ready, visit:
+
+- [Installation](articles/installation.html) – how to install the package
+- [Tutorials](articles/reading_in_data.html) – practical examples of common tasks
 

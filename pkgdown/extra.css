@@ -1,0 +1,17 @@
+
+/* Remove the right-hand "On this page" TOC in article pages */
+/* .template-article .col-lg-3.order-lg-last {
+/*   display: none !important;
+/* }
+
+/* Let the main article content take full width */
+/* .template-article .col-lg-9,
+/* .template-article .col-md-9 {
+/*   max-width: 100% !important;
+/*   flex: 0 0 100% !important;
+/* }
+
+/* Increase spacing between bullet points in main content */
+main li {
+  margin-bottom: 0.6rem;   /* adjust to taste: 0.4–1.0rem works well */
+}

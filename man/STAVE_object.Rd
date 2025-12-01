@@ -42,6 +42,7 @@ variants, while avoiding unnecessary duplication of information.
 \item \href{#method-STAVE_object-get_prevalence}{\code{STAVE_object$get_prevalence()}}
 \item \href{#method-STAVE_object-get_variants}{\code{STAVE_object$get_variants()}}
 \item \href{#method-STAVE_object-drop_study}{\code{STAVE_object$drop_study()}}
+\item \href{#method-STAVE_object-drop_survey}{\code{STAVE_object$drop_survey()}}
 \item \href{#method-STAVE_object-clone}{\code{STAVE_object$clone()}}
 }
 }
@@ -116,18 +117,21 @@ Append new data
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{studies_dataframe}}{a data.frame containing information at the study
-level. This data.frame must have the following columns: study_id,
-study_name, study_type, authors, publication_year, url}
+\item{\code{studies_dataframe}}{a data frame containing information at the study
+level. This data frame must have the following columns: study_id,
+study_label, description, access_level, contributors, reference, reference_year,
+notes. Compulsory fields (no missing values) are: study_id and reference.}
 
-\item{\code{surveys_dataframe}}{a data.frame containing information at the
+\item{\code{surveys_dataframe}}{a data frame containing information at the
 survey level. This data.frame must have the following columns:
-study_key, survey_id, country_name, site_name, latitude, longitude, spatial_notes,
-collection_start, collection_end, collection_day, time_notes.}
+study_id, survey_id, country_name, site_name, latitude, longitude, location_method,
+location_notes, collection_start, collection_end, collection_day, time_method,
+time_notes. Compulsory fields (no missing values) are: study_id, survey_id,
+latitude, longitude, collection_day.}
 
 \item{\code{counts_dataframe}}{a data.frame of genetic information. Must contain
-the following columns: study_key, survey_key, variant_string, variant_num,
-total_num.}
+the following columns: study_id, survey_id, variant_string, variant_num,
+total_num. All fields are compulsory (no missing values).}
 }
 \if{html}{\out{</div>}}
 }
@@ -168,14 +172,16 @@ prevalence along with exact binomial confidence intervals. In the case
 of ambiguous calls, these must be calculated from one of
 \code{numerator_min} or \code{numerator_max}. This argument sets which
 one of these values is used in the calculation. Defaults to
-\code{TRUE}, which risks underestimating prevalence.}
+\code{TRUE}, which risks underestimating prevalence (whereas the
+alternative risks overestimating prevalence).}
 
 \item{\code{return_full}}{if \code{TRUE} (the default) returns the entire loaded
 dataset, with prevalence equal to \code{NA} if there is no denominator.
 If \code{FALSE} only returns entries for which there is a non-zero
 denominator.
 
-@import dplyr}
+@import dplyr
+@importFrom tidyr replace_na}
 }
 \if{html}{\out{</div>}}
 }
@@ -213,6 +219,25 @@ counts data.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{drop_study_id}}{a vector of study_ids to drop from all data objects.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-STAVE_object-drop_survey"></a>}}
+\if{latex}{\out{\hypertarget{method-STAVE_object-drop_survey}{}}}
+\subsection{Method \code{drop_survey()}}{
+Drop one or more survey_ids from the data. This will drop from all
+internally stored data objects, including the corresponding counts data,
+and the study if this is the only survey in that study.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{STAVE_object$drop_survey(drop_survey_id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{drop_survey_id}}{a vector of survey_ids to drop from all data objects.}
 }
 \if{html}{\out{</div>}}
 }

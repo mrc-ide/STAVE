@@ -13,7 +13,40 @@
     <loc>/articles/calculating_prevalence.html</loc>
   </url>
   <url>
+    <loc>/articles/cautionary_notes.html</loc>
+  </url>
+  <url>
+    <loc>/articles/core_design_principles.html</loc>
+  </url>
+  <url>
     <loc>/articles/counts_format.html</loc>
+  </url>
+  <url>
+    <loc>/articles/counts_table.html</loc>
+  </url>
+  <url>
+    <loc>/articles/encoding_data.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_calculating_prevalence.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_cautionary_notes.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_core_design_principles.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_counts_table.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_encoding_data.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_studies_table.html</loc>
+  </url>
+  <url>
+    <loc>/articles/howto_surveys_table.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -31,7 +64,19 @@
     <loc>/articles/relational_structure.html</loc>
   </url>
   <url>
+    <loc>/articles/studies_table.html</loc>
+  </url>
+  <url>
+    <loc>/articles/surveys_table.html</loc>
+  </url>
+  <url>
     <loc>/articles/tutorial_basic.html</loc>
+  </url>
+  <url>
+    <loc>/articles/tutorial_calculating_prevalence.html</loc>
+  </url>
+  <url>
+    <loc>/articles/tutorial_reading_in_data.html</loc>
   </url>
   <url>
     <loc>/articles/variant_strings.html</loc>
