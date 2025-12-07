@@ -96,7 +96,7 @@ STAVE_object <- R6::R6Class(
     #' @param studies_dataframe a data frame containing information at the study
     #'   level. This data frame must have the following columns: study_id,
     #'   study_label, description, access_level, contributors, reference, reference_year,
-    #'   notes. Compulsory fields (no missing values) are: study_id and reference.
+    #'   PMID, notes. Compulsory fields (no missing values) are: study_id and reference.
     #' @param surveys_dataframe a data frame containing information at the
     #'   survey level. This data.frame must have the following columns:
     #'   study_id, survey_id, country_name, site_name, latitude, longitude, location_method,
@@ -105,7 +105,7 @@ STAVE_object <- R6::R6Class(
     #'   latitude, longitude, collection_day.
     #' @param counts_dataframe a data.frame of genetic information. Must contain
     #'   the following columns: study_id, survey_id, variant_string, variant_num,
-    #'   total_num. All fields are compulsory (no missing values).
+    #'   total_num, notes. The only non-compulsory field is notes.
     append_data = function(studies_dataframe, surveys_dataframe, counts_dataframe) {
       
       # basic checks on format of input data.frames. These checks ensure that
@@ -386,9 +386,9 @@ STAVE_object <- R6::R6Class(
       
       # basic structure
       assert_dataframe(studies_dataframe)
-      assert_ncol(studies_dataframe, 7)
+      assert_ncol(studies_dataframe, 8)
       assert_eq(names(studies_dataframe), c("study_id", "study_label", "description", "access_level",
-                                            "contributors", "reference", "reference_year"))
+                                            "contributors", "reference", "reference_year", "PMID"))
       
       # study_id (compulsory)
       assert_non_NA(studies_dataframe$study_id)
@@ -533,9 +533,9 @@ STAVE_object <- R6::R6Class(
       
       # basic structure
       assert_dataframe(counts_dataframe)
-      assert_ncol(counts_dataframe, 5)
+      assert_ncol(counts_dataframe, 6)
       assert_eq(names(counts_dataframe), c("study_id", "survey_id", "variant_string",
-                                           "variant_num", "total_num"))
+                                           "variant_num", "total_num", "notes"))
       
       # study_id (compulsory)
       assert_non_NA(counts_dataframe$study_id)
@@ -556,6 +556,12 @@ STAVE_object <- R6::R6Class(
       # total_num (compulsory)
       assert_non_NA(counts_dataframe$total_num)
       assert_pos_int(counts_dataframe$total_num, zero_allowed = FALSE)
+      
+      # notes
+      w <- which(!is.na(counts_dataframe$notes))
+      if (any(w)) {
+        assert_string(counts_dataframe$notes[w])
+      }
       
       invisible(TRUE)
     },

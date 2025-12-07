@@ -120,7 +120,7 @@ Append new data
 \item{\code{studies_dataframe}}{a data frame containing information at the study
 level. This data frame must have the following columns: study_id,
 study_label, description, access_level, contributors, reference, reference_year,
-notes. Compulsory fields (no missing values) are: study_id and reference.}
+PMID, notes. Compulsory fields (no missing values) are: study_id and reference.}
 
 \item{\code{surveys_dataframe}}{a data frame containing information at the
 survey level. This data.frame must have the following columns:
@@ -131,7 +131,7 @@ latitude, longitude, collection_day.}
 
 \item{\code{counts_dataframe}}{a data.frame of genetic information. Must contain
 the following columns: study_id, survey_id, variant_string, variant_num,
-total_num. All fields are compulsory (no missing values).}
+total_num, notes. The only non-compulsory field is notes.}
 }
 \if{html}{\out{</div>}}
 }
