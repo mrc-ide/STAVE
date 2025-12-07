@@ -1,3 +1,3 @@
-study_id,study_label,description,access_level,contributors,reference,reference_year
-Dama_2017,Reduced ex vivo susceptibility of Plasmodium falciparum after oral artemether-lumefantrine treatment in Mali,NA,public,Dama et al.,https://pubmed.ncbi.nlm.nih.gov/28148267/,2017
-Asua_2019,Changing Molecular Markers of Antimalarial Drug Sensitivity across Uganda,NA,public,Asua et al.,https://pubmed.ncbi.nlm.nih.gov/30559133/,2019
+study_id,study_label,description,access_level,contributors,reference,reference_year,PMID
+Dama_2017,Reduced ex vivo susceptibility of Plasmodium falciparum after oral artemether-lumefantrine treatment in Mali,NA,public,Dama et al.,https://pubmed.ncbi.nlm.nih.gov/28148267/,2017,
+Asua_2019,Changing Molecular Markers of Antimalarial Drug Sensitivity across Uganda,NA,public,Asua et al.,https://pubmed.ncbi.nlm.nih.gov/30559133/,2019,

@@ -29,5 +29,5 @@ All documentation, including installation instructions and tutorials,
 can be found on [the STAVE website](https://mrc-ide.github.io/STAVE/).
 
 See the tagged versions for the latest release, and please refer to a
-specific tag when installing (i.e. `@v1.1.0`) to avoid issues with
+specific tag when installing (i.e. `@v2.0.1`) to avoid issues with
 backward incompatibility.
