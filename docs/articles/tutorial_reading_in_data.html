@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -117,16 +120,16 @@ and manipulate data via specialized member functions.</p>
 <span>              surveys_dataframe <span class="op">=</span> <span class="va">example_input</span><span class="op">$</span><span class="va">surveys</span>,</span>
 <span>              counts_dataframe <span class="op">=</span> <span class="va">example_input</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; data correctly appended</span></span></code></pre></div>
+<p>All three data frames must follow the very specific formats required
+by STAVE. See the <a href="articles/howto_studies_table.html">How it
+works</a> sections if you are unclear on this format. If your data do
+not conform to this structure, the append will be rejected.</p>
 <p>The default print method tells us how many studies and surveys are
 loaded:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span></span>
 <span><span class="co">#&gt; Studies: 2</span></span>
 <span><span class="co">#&gt; Surveys: 6</span></span></code></pre></div>
-<p>This example uses the <code>example_input</code> object that comes
-pre-loaded with the package - have a look at this object to get a feel
-for the required input format (and see the rest of this package
-documentation for a rigorous specification).</p>
 <p>Using a custom class offers several key advantages. Once loaded, all
 data remain consolidated within a single object, avoiding fragmentation.
 The class structure also ensures the data are <em>encapsulated</em>,
@@ -159,6 +162,9 @@ reference
 <th style="text-align:right;">
 reference_year
 </th>
+<th style="text-align:right;">
+PMID
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -184,6 +190,9 @@ Dama et al. 
 <td style="text-align:right;">
 2017
 </td>
+<td style="text-align:right;">
+28148267
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -207,6 +216,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 </tr>
 </tbody>
@@ -527,6 +539,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -545,6 +560,9 @@ crt:76:T
 <td style="text-align:right;">
 170
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -561,6 +579,9 @@ mdr1:86:Y
 </td>
 <td style="text-align:right;">
 158
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -579,6 +600,9 @@ k13:469:Y
 <td style="text-align:right;">
 42
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -595,6 +619,9 @@ k13:675:V
 </td>
 <td style="text-align:right;">
 42
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -613,6 +640,9 @@ k13:675:V
 <td style="text-align:right;">
 43
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -629,6 +659,9 @@ k13:469:Y
 </td>
 <td style="text-align:right;">
 47
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -647,6 +680,9 @@ k13:675:V
 <td style="text-align:right;">
 47
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -664,6 +700,9 @@ k13:469:Y
 <td style="text-align:right;">
 43
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -680,6 +719,9 @@ k13:675:V
 </td>
 <td style="text-align:right;">
 43
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -698,12 +740,15 @@ k13:469:F
 <td style="text-align:right;">
 45
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>However, we cannot directly modify the data in these tables. Instead,
-we have to drop studies and surveys using member functions.</p>
+we have to modify the data structure using member functions.</p>
 </div>
 <div class="section level2">
 <h2 id="dropping-studies-and-surveys">Dropping studies and surveys<a class="anchor" aria-label="anchor" href="#dropping-studies-and-surveys"></a>
@@ -719,12 +764,14 @@ want to drop it from our analysis. We can do so via the
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span><span class="op">$</span><span class="fu">drop_survey</span><span class="op">(</span><span class="st">"Asua_2019_Agago_2017"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; drop 0 studies, 1 survey</span></span></code></pre></div>
-<p>Looking at the STAVE object, we can see that we have reduced the size
+<p>Looking at the STAVE object, we can see how we have reduced the size
 of the data:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span></span>
 <span><span class="co">#&gt; Studies: 1</span></span>
 <span><span class="co">#&gt; Surveys: 4</span></span></code></pre></div>
+<p>We are free to append this information back in at any point, at which
+point it will go through the usual rigorous checks.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

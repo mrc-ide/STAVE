@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -121,6 +124,9 @@ reference
 <th style="text-align:right;">
 reference_year
 </th>
+<th style="text-align:right;">
+PMID
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -146,6 +152,9 @@ Dama et al. 
 <td style="text-align:right;">
 2017
 </td>
+<td style="text-align:right;">
+28148267
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -169,6 +178,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 </tr>
 </tbody>
@@ -285,6 +297,18 @@ Numeric or <code>NA</code>
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
 The calendar year of the source reference.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 100px; border-left:1px solid #ccc;border-right:1px solid #ccc;">
+PMID
+</td>
+<td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
+Numeric or <code>NA</code>
+</td>
+<td style="text-align:left;border-right:1px solid #ccc;">
+For academic papers, the unique PubMed ID. This optional field can be
+very useful for data de-duplication.
 </td>
 </tr>
 </tbody>

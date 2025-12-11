@@ -10,24 +10,6 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/calculating_prevalence.html</loc>
-  </url>
-  <url>
-    <loc>/articles/cautionary_notes.html</loc>
-  </url>
-  <url>
-    <loc>/articles/core_design_principles.html</loc>
-  </url>
-  <url>
-    <loc>/articles/counts_format.html</loc>
-  </url>
-  <url>
-    <loc>/articles/counts_table.html</loc>
-  </url>
-  <url>
-    <loc>/articles/encoding_data.html</loc>
-  </url>
-  <url>
     <loc>/articles/howto_calculating_prevalence.html</loc>
   </url>
   <url>
@@ -43,6 +25,9 @@
     <loc>/articles/howto_encoding_data.html</loc>
   </url>
   <url>
+    <loc>/articles/howto_relational_structure.html</loc>
+  </url>
+  <url>
     <loc>/articles/howto_studies_table.html</loc>
   </url>
   <url>
@@ -52,34 +37,13 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/input_formats.html</loc>
-  </url>
-  <url>
     <loc>/articles/installation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/reading_in_data.html</loc>
-  </url>
-  <url>
-    <loc>/articles/relational_structure.html</loc>
-  </url>
-  <url>
-    <loc>/articles/studies_table.html</loc>
-  </url>
-  <url>
-    <loc>/articles/surveys_table.html</loc>
-  </url>
-  <url>
-    <loc>/articles/tutorial_basic.html</loc>
   </url>
   <url>
     <loc>/articles/tutorial_calculating_prevalence.html</loc>
   </url>
   <url>
     <loc>/articles/tutorial_reading_in_data.html</loc>
-  </url>
-  <url>
-    <loc>/articles/variant_strings.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -89,12 +53,6 @@
   </url>
   <url>
     <loc>/reference/STAVE_object.html</loc>
-  </url>
-  <url>
-    <loc>/reference/allowed_amino_acids.html</loc>
-  </url>
-  <url>
-    <loc>/reference/disallowed_variant_strings.html</loc>
   </url>
   <url>
     <loc>/reference/example_input.html</loc>

@@ -21,7 +21,7 @@ if (requireNamespace("kableExtra", quietly = TRUE)) {
 }
 ```
 
-The final table is the *Counts* table, which stores the genetic information. An example of a correctly formatted *Counts* table is given below:
+This table stores the genetic information. An example of a correctly formatted *Counts* table is given below:
 
 ```{r, echo=FALSE}
 example_input$counts |>
@@ -56,20 +56,23 @@ Mandatory fields are shown in blue.
 ```{r, echo=FALSE}
 
 rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background = "#0366d6"),
-                      Type = "Character string",
+                      Type = "Character string. Must be a valid identifier.",
                       Notes = "The foreign key for this study, pointing back to the <i>Studies</i> table."),
                  list(Column = cell_spec("survey_id", color = "white", background = "#0366d6"),
-                      Type = "Character string",
+                      Type = "Character string. Must be a valid identifier.",
                       Notes = "The foreign key for this survey, pointing back to the <i>Surveys</i> table."),
                  list(Column = cell_spec("variant_string", color = "white", background = "#0366d6"),
                       Type = "Character string. A valid <i>variantstring</i>",
-                      Notes = "A single- or multi-locus haplotype."),
+                      Notes = "A single- or multi-locus haplotype (see below)."),
                  list(Column = cell_spec("variant_num", color = "white", background = "#0366d6"),
                       Type = "Numeric integer",
                       Notes = "The number of samples within which this variant was observed."),
                  list(Column = cell_spec("total_num", color = "white", background = "#0366d6"),
                       Type = "Numeric integer",
-                      Notes = "The total number of samples successfully sequenced at this subset of loci. In other words, the number of samples that <i>could have produced</i> the observed variant.")) |>
+                      Notes = "The total number of samples successfully sequenced at this subset of loci. In other words, the number of samples that <i>could have produced</i> the observed variant."),
+                 list(Column = "notes",
+                      Type = "Character string",
+                      Notes = "Any further information about this mutation (free text).")) |>
   kbl(dformat = "html", escape = FALSE) |>
   kable_styling(full_width = FALSE) |>
   column_spec(1, width = "100px", border_left = "1px solid #ccc", border_right = "1px solid #ccc") |>

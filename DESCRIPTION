@@ -1,7 +1,7 @@
 Package: STAVE
 Type: Package
 Title: Spatial-Temporal Aggregated Variant Encoding
-Version: 2.0.1
+Version: 2.0.2
 Authors@R: c(
     person("Bob", "Verity", email = "r.verity@imperial.ac.uk", role = c("aut", "cre"))
     )
@@ -22,7 +22,7 @@ Imports:
     tidyr,
     variantstring
 Remotes:
-    mrc-ide/variantstring@v1.8.3
+    mrc-ide/variantstring@v1.8.6
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0),

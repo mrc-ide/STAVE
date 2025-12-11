@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -103,7 +106,7 @@ ambiguities</li>
 <div class="section level2">
 <h2 id="calculating-prevalence">Calculating prevalence<a class="anchor" aria-label="anchor" href="#calculating-prevalence"></a>
 </h2>
-<p>We begin by creating a new STAVE object and appending the example
+<p>Let’s begin by creating a new STAVE object and appending the example
 data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create new object</span></span>
@@ -119,12 +122,13 @@ of variants encoded in the object:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span><span class="op">$</span><span class="fu">get_variants</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "crt:76:T"  "k13:469:F" "k13:469:Y" "k13:675:V" "mdr1:86:Y"</span></span></code></pre></div>
-<p>By default, <code>get_variants()</code> lists single-locus variants
-(<code>report_haplo = FALSE</code>). If you instead want to see all
-multi-locus haplotypes, set:</p>
+<p>By default, <code>get_variants()</code> lists single-locus variants.
+If you instead want to see all multi-locus haplotypes, set:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span><span class="op">$</span><span class="fu">get_variants</span><span class="op">(</span>report_haplo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "crt:76:T"  "k13:469:F" "k13:469:Y" "k13:675:V" "mdr1:86:Y"</span></span></code></pre></div>
+<p>(for this example there is no difference because we have no
+multi-locus haplotypes loaded).</p>
 <div class="section level3">
 <h3 id="prevalence-at-a-single-locus">Prevalence at a single locus<a class="anchor" aria-label="anchor" href="#prevalence-at-a-single-locus"></a>
 </h3>
@@ -156,6 +160,9 @@ reference
 </th>
 <th style="text-align:right;">
 reference_year
+</th>
+<th style="text-align:right;">
+PMID
 </th>
 <th style="text-align:left;">
 survey_id
@@ -233,6 +240,9 @@ Dama et al. 
 <td style="text-align:right;">
 2017
 </td>
+<td style="text-align:right;">
+28148267
+</td>
 <td style="text-align:left;">
 Dama_2017_Bamako_2014
 </td>
@@ -307,6 +317,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 <td style="text-align:left;">
 Asua_2019_Agago_2017
@@ -383,6 +396,9 @@ Asua et al. 
 <td style="text-align:right;">
 2019
 </td>
+<td style="text-align:right;">
+30559133
+</td>
 <td style="text-align:left;">
 Asua_2019_Arua_2017
 </td>
@@ -457,6 +473,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 <td style="text-align:left;">
 Asua_2019_Kole_2017
@@ -533,6 +552,9 @@ Asua et al. 
 <td style="text-align:right;">
 2019
 </td>
+<td style="text-align:right;">
+30559133
+</td>
 <td style="text-align:left;">
 Asua_2019_Lamwo_2017
 </td>
@@ -608,6 +630,9 @@ Asua et al. 
 <td style="text-align:right;">
 2019
 </td>
+<td style="text-align:right;">
+30559133
+</td>
 <td style="text-align:left;">
 Asua_2019_Mubende_2017
 </td>
@@ -666,7 +691,7 @@ NA
 <p>The output is a joined table containing study, survey, and count
 information, as well as the estimated prevalence and its 95% confidence
 interval for each survey.</p>
-<p>Note that a row is returned for every loaded survey, even when the
+<p>Note that we have a row for every loaded survey, even when the
 denominator is zero. To return only surveys with non-zero denominators,
 use:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -694,6 +719,9 @@ reference
 </th>
 <th style="text-align:right;">
 reference_year
+</th>
+<th style="text-align:right;">
+PMID
 </th>
 <th style="text-align:left;">
 survey_id
@@ -769,6 +797,9 @@ Dama et al. 
 </td>
 <td style="text-align:right;">
 2017
+</td>
+<td style="text-align:right;">
+28148267
 </td>
 <td style="text-align:left;">
 Dama_2017_Bamako_2014
@@ -856,6 +887,9 @@ reference
 <th style="text-align:right;">
 reference_year
 </th>
+<th style="text-align:right;">
+PMID
+</th>
 <th style="text-align:left;">
 survey_id
 </th>
@@ -938,6 +972,9 @@ Dama et al. 
 <td style="text-align:right;">
 2017
 </td>
+<td style="text-align:right;">
+28148267
+</td>
 <td style="text-align:left;">
 Dama_2017_Bamako_2014
 </td>
@@ -1018,6 +1055,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 <td style="text-align:left;">
 Asua_2019_Agago_2017
@@ -1100,6 +1140,9 @@ Asua et al. 
 <td style="text-align:right;">
 2019
 </td>
+<td style="text-align:right;">
+30559133
+</td>
 <td style="text-align:left;">
 Asua_2019_Arua_2017
 </td>
@@ -1180,6 +1223,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 <td style="text-align:left;">
 Asua_2019_Kole_2017
@@ -1262,6 +1308,9 @@ Asua et al. 
 <td style="text-align:right;">
 2019
 </td>
+<td style="text-align:right;">
+30559133
+</td>
 <td style="text-align:left;">
 Asua_2019_Lamwo_2017
 </td>
@@ -1342,6 +1391,9 @@ Asua et al. 
 </td>
 <td style="text-align:right;">
 2019
+</td>
+<td style="text-align:right;">
+30559133
 </td>
 <td style="text-align:left;">
 Asua_2019_Mubende_2017

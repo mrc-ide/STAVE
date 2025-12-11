@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -94,11 +97,11 @@
 
     
     
-<p>The <em>Surveys</em> table captures information about the context
-within which data were collected. We can think of a survey as <strong>a
-single sampling event (or tightly bounded collection period) at a
-specific location</strong>. Different surveys may occupy different
-spatial locations, different sampling times, or both.</p>
+<p>This table captures information about the context within which data
+were collected. We can think of a survey as <strong>a single sampling
+event (or tightly bounded collection period) at a specific
+location</strong>. Different surveys may occupy different spatial
+locations, different sampling times, or both.</p>
 <p>An example of a correctly formatted <em>Surveys</em> table is given
 below (scroll too see the whole table):</p>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
@@ -427,7 +430,7 @@ Notes
 <span style="     color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(3, 102, 214, 255) !important;">study_id</span>
 </td>
 <td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
-Character string
+Character string. Must be a valid identifier.
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
 The foreign key for this study, pointing back to the <i>Studies</i>
@@ -439,7 +442,7 @@ table.
 <span style="     color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(3, 102, 214, 255) !important;">survey_id</span>
 </td>
 <td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
-Character string
+Character string. Must be a valid identifier.
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
 The private key for this survey. Must be completely unique - not just
@@ -478,8 +481,9 @@ analysis or when joining data (see <i>Core Design Principles</i>)
 Numeric<br>[-90, 90]
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
-If imputed then details of the imputation should be recorded in the
-<code>location_method</code> and/or <code>location_notes</code>.
+Spatial coordinates. If imputed then details of the imputation should be
+recorded in the <code>location_method</code> and/or
+<code>location_notes</code>.
 </td>
 </tr>
 <tr>
@@ -490,8 +494,9 @@ If imputed then details of the imputation should be recorded in the
 Numeric<br>[-180, 180]
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
-If imputed then details of the imputation should be recorded in the
-<code>location_method</code> and/or <code>location_notes</code>.
+Spatial coordinates. If imputed then details of the imputation should be
+recorded in the <code>location_method</code> and/or
+<code>location_notes</code>.
 </td>
 </tr>
 <tr>

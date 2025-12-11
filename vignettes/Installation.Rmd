@@ -23,14 +23,14 @@ library(STAVE)
 You can install the most recent version of STAVE using:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("mrc-ide/STAVE")
+# install.packages("remotes")
+remotes::install_github("mrc-ide/STAVE")
 ```
 
-It is good practice to specify a version number to ensure your scripts will run even if the package changes over time (backward-compatibility is not guaranteed). To install a specific version you can use the following format:
+It is good practice to specify a version number to ensure your scripts will run even if the package changes over time. To install a specific version you can use the `@` symbol as follows:
 
 ``` r
-devtools::install_github("mrc-ide/STAVE@v2.0.1")
+remotes::install_github("mrc-ide/STAVE@v2.0.2")
 ```
 
 see the "Tags" section of the [main Github page](https://github.com/mrc-ide/STAVE) for the latest version number.

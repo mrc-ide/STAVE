@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -94,12 +97,10 @@
 
     
     
-<p>One of the more nuanced aspects of using STAVE is learning how to
-correctly format genetic data in the <em>Counts</em> table. STAVE is
-designed with the flexibility to encode full haplotypes, preserving
-information about linkage across multiple genes and multiple loci. But
-what happens when not all loci amplify in some samples? Or when
-published data only report locus-by-locus results, rather than full
+<p>STAVE is designed with the flexibility to encode full haplotypes,
+preserving information about linkage across multiple genes and multiple
+loci. But what happens when not all loci amplify in some samples? Or
+when published data only report locus-by-locus results, rather than full
 haplotypes? These situations are entirely manageable once we understand
 the underlying data structure.</p>
 <div class="section level3">
@@ -129,6 +130,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -147,6 +151,9 @@ crt:72:C
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -163,6 +170,9 @@ crt:73:V
 </td>
 <td style="text-align:right;">
 95
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -181,6 +191,9 @@ crt:74:I
 <td style="text-align:right;">
 98
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -198,6 +211,9 @@ crt:75:E
 <td style="text-align:right;">
 92
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -214,6 +230,9 @@ crt:76:T
 </td>
 <td style="text-align:right;">
 89
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -253,6 +272,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -271,6 +293,9 @@ crt:72-76:CVIET
 <td style="text-align:right;">
 65
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -287,6 +312,9 @@ crt:72-76:CVMET
 </td>
 <td style="text-align:right;">
 65
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -305,6 +333,9 @@ crt:72-74:CVI
 <td style="text-align:right;">
 5
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -321,6 +352,9 @@ crt:74-76:IET
 </td>
 <td style="text-align:right;">
 3
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -346,7 +380,9 @@ only once</strong>.</p>
 list single-locus prevalences calculated from the full haplotypes. STAVE
 is smart enough to calculate single-locus prevalences from the full
 haplotype data, and so encoding the same information twice would result
-in double-counting.</p>
+in double-counting. This encoding is generally preferable over the
+method above because all the same information <em>and more</em> can be
+calculated from these data.</p>
 </div>
 <div class="section level3">
 <h3 id="encoding-mixed-calls">Encoding mixed calls<a class="anchor" aria-label="anchor" href="#encoding-mixed-calls"></a>
@@ -370,6 +406,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -388,6 +427,9 @@ crt:72-74:CVI
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -404,6 +446,9 @@ crt:72-74:C/S_VI
 </td>
 <td style="text-align:right;">
 100
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -422,6 +467,9 @@ crt:72-74:C/S_V_I/M
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -439,6 +487,9 @@ crt:72-74:C|S_V_I|M
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 </tbody>
 </table>
@@ -450,8 +501,7 @@ and <code>|</code> a phased mixed call.</p>
 therefore the denominator of 100 is shared over all rows. The various
 combinations of mixed calls are each given a different row. Samples that
 are <code>crt:72-74:C/S_VI</code> are not also contained in the numbers
-for <code>crt:72-74:CVI</code> - as always, samples appear only
-once.</p>
+for <code>crt:72-74:CVI</code>. As always, samples appear only once.</p>
 </div>
 <div class="section level3">
 <h3 id="how-many-loci-is-too-many">How many loci is too many?<a class="anchor" aria-label="anchor" href="#how-many-loci-is-too-many"></a>
@@ -475,6 +525,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody><tr>
 <td style="text-align:left;">
@@ -491,6 +544,9 @@ crt:72-76:CVIET;dhfr:51_59_108_164:NCSI;dhps:436_437_540_581_613:AGEGT
 </td>
 <td style="text-align:right;">
 5
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr></tbody>
 </table>
@@ -518,6 +574,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -536,6 +595,9 @@ crt:72-76:CVIET
 <td style="text-align:right;">
 5
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -553,6 +615,9 @@ dhfr:51_59_108_164:NCSI
 <td style="text-align:right;">
 5
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -569,6 +634,9 @@ dhps:436_437_540_581_613:AGEGT
 </td>
 <td style="text-align:right;">
 5
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -588,7 +656,8 @@ to capture key drug resistance combinations in a lightweight and
 flexible notation, then STAVE may be a good choice.</p>
 <hr>
 <p>The <a href="articles/calculating_prevalence.html">next page</a> goes
-into the details of calculating prevalence from the encoded data.</p>
+into the details of how prevalence is calculated from the encoded
+data.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

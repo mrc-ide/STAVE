@@ -14,7 +14,7 @@ package is through this class in the form of member functions."><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,9 +26,12 @@ package is through this class in the form of member functions."><!-- mathjax -->
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -174,7 +177,7 @@ created with the most recent version.</p><div class="section">
 <dd><p>a data frame containing information at the study
 level. This data frame must have the following columns: study_id,
 study_label, description, access_level, contributors, reference, reference_year,
-notes. Compulsory fields (no missing values) are: study_id and reference.</p></dd>
+PMID, notes. Compulsory fields (no missing values) are: study_id and reference.</p></dd>
 
 
 <dt><code>surveys_dataframe</code></dt>
@@ -189,7 +192,7 @@ latitude, longitude, collection_day.</p></dd>
 <dt><code>counts_dataframe</code></dt>
 <dd><p>a data.frame of genetic information. Must contain
 the following columns: study_id, survey_id, variant_string, variant_num,
-total_num. All fields are compulsory (no missing values).</p></dd>
+total_num, notes. The only non-compulsory field is notes.</p></dd>
 
 
 </dl><p></p></div>

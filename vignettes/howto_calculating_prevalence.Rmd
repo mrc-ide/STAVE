@@ -40,7 +40,7 @@ data.frame(study_id = "study_01",
                 full_width = TRUE)
 ```
 
-Prevalence calculation in STAVE starts by specifying the variant of interest in [variantstring](https://github.com/mrc-ide/variantstring) format. For example:
+Prevalence calculation in STAVE starts by specifying the variant of interest. For example:
 
 ```{r, eval=FALSE}
 s$get_prevalence(target_variant = "crt:76:T")
@@ -48,7 +48,7 @@ s$get_prevalence(target_variant = "crt:76:T")
 
 This is then compared against all data loaded into the current object.
 
-For example, imagine we want to know the prevalence of `crt:76:T`. This is clearly a direct match to the first row, and so these values should be added to the numerator and denominator. It is also a match to the second row, which contains `crt:76:T` as a subset, meaning these values should also be added to the numerator and denominator. This gives prevalence = (4 + 1) / (20 + 5) = 20%.
+For example, `crt:76:T` is clearly a direct match to the first row, and so these values should be added to the numerator and denominator. It is also a match to the second row, which contains `crt:76:T` as a subset, meaning these values should also be added to the numerator and denominator. This gives prevalence = (4 + 1) / (20 + 5) = 20%.
 
 Now imagine we want to know the prevalence of `crt:76:E`. This is only a match to the second row in terms of the variant, however, it is a match to both rows in terms of position. In other words, both rows *could* have produced allele `E` at position 76. Hence, we obtain prevalence = 1 / (20 + 5) = 4%.
 
