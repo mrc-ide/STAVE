@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -80,9 +83,9 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p><img src="reference/figures/hex.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;"></p>
+  <main id="main" class="col-md-9"><p><img src="reference/figures/stave.png" alt="STAVE Logo" style="max-height: 250px; margin-top:50px; margin-bottom:20px;"></p>
 <p>STAVE stands for <strong>S</strong>patial-<strong>T</strong>emporal <strong>A</strong>ggregated <strong>V</strong>ariant <strong>E</strong>ncoding.</p>
-<p>It is a lightweight data schema for organising data commonly found in malaria molecular surveillance (MMS) - aggregate counts of non-synonymous mutations. STAVE provides a consistent way to link genetic measurements to precise space–time coordinates and to encode multi-locus haplotypes, even when mixtures or ambiguous calls are present. It also includes helper functions for estimating variant prevalence directly from the encoded data.</p>
+<p>It is a lightweight data schema for organising aggregate counts of non-synonymous mutations, which is a data type commonly found in malaria molecular surveillance (MMS) studies. STAVE provides a consistent way to link genetic measurements to precise space–time coordinates, and to estimate the prevalence of particular genetic variants even when mixtures or ambiguous calls are present.</p>
 <div class="section level2">
 <h2 id="what-stave-is-designed-to-do">What STAVE is designed to do<a class="anchor" aria-label="anchor" href="#what-stave-is-designed-to-do"></a>
 </h2>
@@ -91,7 +94,7 @@
 <li>
 <strong>Provide a simple, relational data structure</strong> for storing study metadata, survey-level space–time information, and aggregated genetic counts.</li>
 <li>
-<strong>Encode amino-acid haplotypes in a compact, human-readable format</strong> using the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring</a> format.</li>
+<strong>Encode haplotypes of non-synonymous mutations (i.e. changes in amino acid) in a compact, human-readable format</strong> using the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring</a> format.</li>
 <li>
 <strong>Support robust prevalence estimation</strong>, even when variants represent subsets of longer haplotypes or when mixed calls introduce uncertainty.</li>
 </ul>
@@ -101,7 +104,7 @@
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <p>To learn how the STAVE data structure works, see <a href="articles/core_design_principles.html">How it works</a>.</p>
-<p>When you’re ready, visit:</p>
+<p>When you’re ready to start working with the package, visit:</p>
 <ul>
 <li>
 <a href="articles/installation.html">Installation</a> – how to install the package</li>

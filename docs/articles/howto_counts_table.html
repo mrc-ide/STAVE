@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -94,9 +97,8 @@
 
     
     
-<p>The final table is the <em>Counts</em> table, which stores the
-genetic information. An example of a correctly formatted <em>Counts</em>
-table is given below:</p>
+<p>This table stores the genetic information. An example of a correctly
+formatted <em>Counts</em> table is given below:</p>
 <div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
 <table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
 <thead><tr>
@@ -114,6 +116,9 @@ variant_num
 </th>
 <th style="text-align:right;">
 total_num
+</th>
+<th style="text-align:left;">
+notes
 </th>
 </tr></thead>
 <tbody>
@@ -133,6 +138,9 @@ crt:76:T
 <td style="text-align:right;">
 170
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -149,6 +157,9 @@ mdr1:86:Y
 </td>
 <td style="text-align:right;">
 158
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -167,6 +178,9 @@ k13:469:Y
 <td style="text-align:right;">
 42
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -183,6 +197,9 @@ k13:675:V
 </td>
 <td style="text-align:right;">
 42
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -201,6 +218,9 @@ k13:675:V
 <td style="text-align:right;">
 43
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -217,6 +237,9 @@ k13:469:Y
 </td>
 <td style="text-align:right;">
 47
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -235,6 +258,9 @@ k13:675:V
 <td style="text-align:right;">
 47
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -252,6 +278,9 @@ k13:469:Y
 <td style="text-align:right;">
 43
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -268,6 +297,9 @@ k13:675:V
 </td>
 <td style="text-align:right;">
 43
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -285,6 +317,9 @@ k13:469:F
 </td>
 <td style="text-align:right;">
 45
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -323,7 +358,7 @@ Notes
 <span style="     color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(3, 102, 214, 255) !important;">study_id</span>
 </td>
 <td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
-Character string
+Character string. Must be a valid identifier.
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
 The foreign key for this study, pointing back to the <i>Studies</i>
@@ -335,7 +370,7 @@ table.
 <span style="     color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(3, 102, 214, 255) !important;">survey_id</span>
 </td>
 <td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
-Character string
+Character string. Must be a valid identifier.
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
 The foreign key for this survey, pointing back to the <i>Surveys</i>
@@ -350,7 +385,7 @@ table.
 Character string. A valid <i>variantstring</i>
 </td>
 <td style="text-align:left;border-right:1px solid #ccc;">
-A single- or multi-locus haplotype.
+A single- or multi-locus haplotype (see below).
 </td>
 </tr>
 <tr>
@@ -375,6 +410,17 @@ Numeric integer
 The total number of samples successfully sequenced at this subset of
 loci. In other words, the number of samples that <i>could have
 produced</i> the observed variant.
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 100px; border-left:1px solid #ccc;border-right:1px solid #ccc;">
+notes
+</td>
+<td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
+Character string
+</td>
+<td style="text-align:left;border-right:1px solid #ccc;">
+Any further information about this mutation (free text).
 </td>
 </tr>
 </tbody>

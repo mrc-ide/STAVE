@@ -18,17 +18,17 @@ knitr::opts_chunk$set(
 library(STAVE)
 ```
 
-There are always trade-offs when deciding how to store data. Different formats prioritise different things — human readability, compact file size, speed of access, ease of sharing, etc. No single approach optimises all of these at once. Where we choose to land depends on the overall design philosophy and what we need the data to support.
+There are always trade-offs when deciding how to store data. Different formats prioritise different things — human readability, compact file size, speed of access, ease of sharing, etc. No single approach optimises all of these at once. Where we choose to land depends on the overall design philosophy and what purposes the data are intended to support.
 
-STAVE was developed because existing formats in malaria molecular surveillance (MMS) are not ideally suited to estimating the prevalence of non-synonymous mutations or handling the spatial–temporal complexity of metadata. Here we describe the specific issues that STAVE is designed to address, which form the motivations behind our design choices.
+STAVE was developed because existing formats in malaria molecular surveillance (MMS) are not ideally suited to estimating the prevalence of non-synonymous mutations in a spatial-temporal context. Here we describe the specific issues that STAVE is designed to address, and how these influence our design choices.
 
 ### Linkage of genetic data to precise space-time coordinates
 
 Genetic data are often linked to places using descriptive fields like the country name, the name of an administrative area, or a “site” name. This is flexible, but it brings a lot of ambiguity. A site might mean a clinic, a village, a district, or something else entirely, and different contributors rarely use the term in the same way. This makes it hard to compare data across studies and can result in mixed levels of spatial granularity within a single dataset.
 
-Using free-text location names is also unreliable. Take Côte d’Ivoire: it might appear as Ivory Coast, Cote d’Ivoire, Côte d’Ivoire, Republic of Côte d’Ivoire, and many other variations that look almost identical. These small differences can stop datasets from joining cleanly, for example when grouping by country, and are a common source of accidental data duplication.
+Using free-text location names is also unreliable. Take *Côte d’Ivoire* as an example: it might appear as Ivory Coast, Cote d’Ivoire, Côte d’Ivoire, Republic of Côte d’Ivoire, and many other variations that look almost identical. These small differences can stop datasets from joining cleanly, for example when grouping by country, and are a common source of accidental data duplication.
 
-Many projects try to avoid this by using country or administrative codes such as ISO-2, ISO-3, or GADM IDs. This helps, but it introduces a new problem: administrative boundaries and codes are not stable over time. Countries split, rename, or merge; administrative units are redrawn; and every coding system forces the data provider to choose one particular version. This means the codes themselves can become a source of inconsistency unless the chosen boundary set is carefully documented and version-controlled.
+Many projects try to avoid this by using country or administrative codes such as [ISO-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), [ISO-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3), or [GADM IDs](https://gadm.org/metadata.html). This helps, but it introduces a new problem: administrative boundaries and codes are not stable over time. Countries split, rename, or merge; administrative units are redrawn; and every coding system forces the data provider to choose one particular version. This means the codes themselves can become a source of inconsistency unless the chosen boundary set is carefully documented and version-controlled.
 
 Time information can be just as messy. Some datasets only record a sampling year, which can mask interesting patterns in places with strong seasonality. Others describe time in vague terms like “mid-2014” or “rainy season”, which leaves too much room for interpretation.
 
@@ -38,11 +38,13 @@ The main downside of this approach is that it sometimes requires imputing spatia
 
 ### Flexible encoding of haplotypes
 
-Existing approaches to encoding non-synonymous mutations, i.e. those that change the amino acid code, each solve part of the problem but none fully meet the needs of MMS. The de-facto shorthand — such as N86Y for single codons or CVMNK for *pfcrt* haplotypes — is wonderfully compact and easy to write, but provides no consistent rules for representing mixed or phased calls, and different groups often improvise their own conventions.
+Existing approaches to encoding non-synonymous mutations, i.e. those that change the amino acid code, each solve part of the problem but none fully meet the needs of MMS. The de-facto shorthand — such as N86Y for single codons or CVMNK for multi-locus *pfcrt* haplotypes — is wonderfully compact and easy to write, but provides no consistent rules for representing mixed or phased calls, and different groups often improvise their own conventions.
 
 At the other extreme, formats like [VCF](https://samtools.github.io/hts-specs/VCFv4.2.pdf) and standards such as [HGVS](https://hgvs-nomenclature.org/stable/background/simple/) and [GA4GH VRS](https://www.ga4gh.org/product/variation-representation/) offer highly structured, rigorous ways to describe alleles, haplotypes, and genotypes, including heterozygosity and phasing at the DNA level. However, these are designed for individual-level, nucleotide-resolved data and become either irrelevant (e.g. phasing differences that collapse to the same amino acid) or extremely verbose when applied to the short haplotypes often found in MMS.
 
-There is a clear gap for something in between: a lightweight, human-readable encoding that is still rich enough to capture features needed for prevalence estimation. This was the motivation behind developing the [variantstring](https://github.com/mrc-ide/variantstring) format: a compact, human-readable way to encode amino-acid variation that sits between informal shorthand like CVMNK and heavyweight standards like HGVS or VRS.
+Sitting on top of this are statistical issues related to prevalence estimation. For example, if a haplotype has two or more unphased mixed calls then it becomes statistically impossible to know with 100% confidence whether a particular haplotype is present within this mixture. However, if we focus on a short sub-region of this haplotype where there are one or fewer mixed loci then this issue goes away, and we can resolve the haplotypes exactly. Therefore, the question of how we **encode the data** vs. how we **estimate prevalence from the data** are not exactly the same thing, and an ideal encoding would allow prevalence estimation using all available information.
+
+There is a clear gap for a lightweight, human-readable encoding that is still rich enough to capture features needed for prevalence estimation. This was the motivation behind developing the [variantstring](https://github.com/mrc-ide/variantstring) format: a compact, human-readable way to encode amino-acid variation that sits between informal shorthand like CVMNK and heavyweight standards like HGVS or VRS.
 
 For example, a simple *pfcrt* haplotype can be written as
 ```
@@ -52,11 +54,10 @@ and an unphased mixture of the CVIET and CVMNK haplotypes can be written as
 ```
 pfcrt:72-76:C_V_I/M_E/N_T/K
 ```
-This is short enough to be manually entered if needed - for example when extracting data from academic publications - while also containing rich information on ambiguities.
+This is short enough to be manually entered if needed - for example when extracting data from academic publications.
 
 For aggregated count data, each variantstring can be paired with a numerator (the number of samples in which that variant appears) and a denominator (the number of samples successfully sequenced at the relevant loci). Once encoded in this way, STAVE can compute the prevalence of any subset of a haplotype — for example, just codon 76 of *pfcrt*, or codons 72–75 excluding 76 — by checking which samples have unambiguous information over exactly those positions. For example, in the unphased mixture shown above, we cannot assert the presence of the CVIET haplotype itself, but we can say that codon 74 contains both the `I` and `M` alleles.
 
-By separating the **encoding** of the genetic information from the **prevalence** of a variant, we maintain flexibility and rigour.
 
 ### Relational structure
 
@@ -70,5 +71,5 @@ STAVE uses a three-table relational layout built around this idea: studies, surv
 
 ---
 
-The [next few pages](articles/studies_table.html) go into the specific formatting requirements of each of these three linked tables. If you prefer to get stuck into code, the [tutorials](articles/reading_in_data.html) use an example dataset that comes pre-loaded with STAVE.
+The [next few pages](articles/studies_table.html) go into the specific formatting requirements of each of these three linked tables.
 

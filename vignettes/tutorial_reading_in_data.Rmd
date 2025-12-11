@@ -46,14 +46,13 @@ s$append_data(studies_dataframe = example_input$studies,
               counts_dataframe = example_input$counts)
 ```
 
+All three data frames must follow the very specific formats required by STAVE. See the [How it works](articles/howto_studies_table.html) sections if you are unclear on this format. If your data do not conform to this structure, the append will be rejected.
+
 The default print method tells us how many studies and surveys are loaded:
 
 ```{r}
 s
 ```
-
-This example uses the `example_input` object that comes pre-loaded with the
-package - have a look at this object to get a feel for the required input format (and see the rest of this package documentation for a rigorous specification).
 
 Using a custom class offers several key advantages. Once loaded, all data remain
 consolidated within a single object, avoiding fragmentation. The class structure
@@ -93,7 +92,7 @@ s$get_counts() |>
   scroll_box(width = "100%", height = NULL)
 ```
 
-However, we cannot directly modify the data in these tables. Instead, we have to drop studies and surveys using member functions.
+However, we cannot directly modify the data in these tables. Instead, we have to modify the data structure using member functions.
 
 ## Dropping studies and surveys
 
@@ -109,10 +108,11 @@ Similarly, we may want to drop a specific survey - for example the `Asua_2019_Ag
 s$drop_survey("Asua_2019_Agago_2017")
 ```
 
-Looking at the STAVE object, we can see that we have reduced the size of the data:
+Looking at the STAVE object, we can see how we have reduced the size of the data:
 
 ```{r}
 s
 ```
 
+We are free to append this information back in at any point, at which point it will go through the usual rigorous checks.
 

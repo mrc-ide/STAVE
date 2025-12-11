@@ -28,7 +28,7 @@ This tutorial covers the following topics:
 
 ## Calculating prevalence
 
-We begin by creating a new STAVE object and appending the example data:
+Let's begin by creating a new STAVE object and appending the example data:
 
 ```{r}
 # create new object
@@ -46,12 +46,13 @@ Before calculating prevalence, it is often useful to inspect the set of variants
 s$get_variants()
 ```
 
-By default, `get_variants()` lists single-locus variants (`report_haplo = FALSE`).
-If you instead want to see all multi-locus haplotypes, set:
+By default, `get_variants()` lists single-locus variants. If you instead want to see all multi-locus haplotypes, set:
 
 ```{r}
 s$get_variants(report_haplo = TRUE)
 ```
+
+(for this example there is no difference because we have no multi-locus haplotypes loaded).
 
 ### Prevalence at a single locus
 
@@ -69,7 +70,7 @@ s$get_prevalence("crt:76:T") |>
 
 The output is a joined table containing study, survey, and count information, as well as the estimated prevalence and its 95% confidence interval for each survey.
 
-Note that a row is returned for every loaded survey, even when the denominator is zero.
+Note that we have a row for every loaded survey, even when the denominator is zero.
 To return only surveys with non-zero denominators, use:
 
 ```{r, eval=FALSE}
@@ -81,6 +82,7 @@ s$get_prevalence("crt:76:T", return_full = FALSE) |>
   kbl(format = "html", table.attr = "style='width:100%; white-space: nowrap;'") |>
   scroll_box(width = "100%", height = NULL)
 ```
+
 
 ### Prevalence of a haploype, and ambiguous matches
 

@@ -24,7 +24,7 @@ if (requireNamespace("dplyr", quietly = TRUE)) {
 }
 ```
 
-One of the more nuanced aspects of using STAVE is learning how to correctly format genetic data in the *Counts* table. STAVE is designed with the flexibility to encode full haplotypes, preserving information about linkage across multiple genes and multiple loci. But what happens when not all loci amplify in some samples? Or when published data only report locus-by-locus results, rather than full haplotypes? These situations are entirely manageable once we understand the underlying data structure.
+STAVE is designed with the flexibility to encode full haplotypes, preserving information about linkage across multiple genes and multiple loci. But what happens when not all loci amplify in some samples? Or when published data only report locus-by-locus results, rather than full haplotypes? These situations are entirely manageable once we understand the underlying data structure.
 
 ### Encoding single-locus data
 
@@ -66,7 +66,7 @@ The next two rows describe samples that only amplified at a subset of loci. The 
 
 Importantly, **there is no double counting in this table**. The `crt:72-76:CVIET` samples are not included in the `crt:72-74:CVI` numbers, even though technically they did amplify at all these loci. If you're ever unsure what to do, remember that **every sample is present in this table only once**.
 
-For the same reason, it would be incorrect for this table to also list single-locus prevalences calculated from the full haplotypes. STAVE is smart enough to calculate single-locus prevalences from the full haplotype data, and so encoding the same information twice would result in double-counting.
+For the same reason, it would be incorrect for this table to also list single-locus prevalences calculated from the full haplotypes. STAVE is smart enough to calculate single-locus prevalences from the full haplotype data, and so encoding the same information twice would result in double-counting. This encoding is generally preferable over the method above because all the same information *and more* can be calculated from these data.
 
 ### Encoding mixed calls
 
@@ -82,7 +82,7 @@ input_counts |>
 
 See the [variant string](https://github.com/mrc-ide/variantstring) package for further details of how to encode mixed calls, but in short, the `/` symbol specifies an un-phased mixed call, and `|` a phased mixed call.
 
-All of these samples amplified successfully at positions 72 to 74, therefore the denominator of 100 is shared over all rows. The various combinations of mixed calls are each given a different row. Samples that are `crt:72-74:C/S_VI` are not also contained in the numbers for `crt:72-74:CVI` - as always, samples appear only once.
+All of these samples amplified successfully at positions 72 to 74, therefore the denominator of 100 is shared over all rows. The various combinations of mixed calls are each given a different row. Samples that are `crt:72-74:C/S_VI` are not also contained in the numbers for `crt:72-74:CVI`. As always, samples appear only once.
 
 ### How many loci is too many?
 
@@ -114,4 +114,4 @@ Overall, there is a balance to strike between capturing everything and capturing
 
 ---
 
-The [next page](articles/calculating_prevalence.html) goes into the details of calculating prevalence from the encoded data.
+The [next page](articles/calculating_prevalence.html) goes into the details of how prevalence is calculated from the encoded data.

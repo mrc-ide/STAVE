@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -98,13 +101,13 @@
 Different formats prioritise different things — human readability,
 compact file size, speed of access, ease of sharing, etc. No single
 approach optimises all of these at once. Where we choose to land depends
-on the overall design philosophy and what we need the data to
-support.</p>
+on the overall design philosophy and what purposes the data are intended
+to support.</p>
 <p>STAVE was developed because existing formats in malaria molecular
 surveillance (MMS) are not ideally suited to estimating the prevalence
-of non-synonymous mutations or handling the spatial–temporal complexity
-of metadata. Here we describe the specific issues that STAVE is designed
-to address, which form the motivations behind our design choices.</p>
+of non-synonymous mutations in a spatial-temporal context. Here we
+describe the specific issues that STAVE is designed to address, and how
+these influence our design choices.</p>
 <div class="section level3">
 <h3 id="linkage-of-genetic-data-to-precise-space-time-coordinates">Linkage of genetic data to precise space-time coordinates<a class="anchor" aria-label="anchor" href="#linkage-of-genetic-data-to-precise-space-time-coordinates"></a>
 </h3>
@@ -115,20 +118,20 @@ clinic, a village, a district, or something else entirely, and different
 contributors rarely use the term in the same way. This makes it hard to
 compare data across studies and can result in mixed levels of spatial
 granularity within a single dataset.</p>
-<p>Using free-text location names is also unreliable. Take Côte
-d’Ivoire: it might appear as Ivory Coast, Cote d’Ivoire, Côte d’Ivoire,
-Republic of Côte d’Ivoire, and many other variations that look almost
-identical. These small differences can stop datasets from joining
-cleanly, for example when grouping by country, and are a common source
-of accidental data duplication.</p>
+<p>Using free-text location names is also unreliable. Take <em>Côte
+d’Ivoire</em> as an example: it might appear as Ivory Coast, Cote
+d’Ivoire, Côte d’Ivoire, Republic of Côte d’Ivoire, and many other
+variations that look almost identical. These small differences can stop
+datasets from joining cleanly, for example when grouping by country, and
+are a common source of accidental data duplication.</p>
 <p>Many projects try to avoid this by using country or administrative
-codes such as ISO-2, ISO-3, or GADM IDs. This helps, but it introduces a
-new problem: administrative boundaries and codes are not stable over
-time. Countries split, rename, or merge; administrative units are
-redrawn; and every coding system forces the data provider to choose one
-particular version. This means the codes themselves can become a source
-of inconsistency unless the chosen boundary set is carefully documented
-and version-controlled.</p>
+codes such as <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" class="external-link">ISO-2</a>, <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3" class="external-link">ISO-3</a>, or <a href="https://gadm.org/metadata.html" class="external-link">GADM IDs</a>. This helps, but it
+introduces a new problem: administrative boundaries and codes are not
+stable over time. Countries split, rename, or merge; administrative
+units are redrawn; and every coding system forces the data provider to
+choose one particular version. This means the codes themselves can
+become a source of inconsistency unless the chosen boundary set is
+carefully documented and version-controlled.</p>
 <p>Time information can be just as messy. Some datasets only record a
 sampling year, which can mask interesting patterns in places with strong
 seasonality. Others describe time in vague terms like “mid-2014” or
@@ -162,10 +165,10 @@ information available.</p>
 <p>Existing approaches to encoding non-synonymous mutations, i.e. those
 that change the amino acid code, each solve part of the problem but none
 fully meet the needs of MMS. The de-facto shorthand — such as N86Y for
-single codons or CVMNK for <em>pfcrt</em> haplotypes — is wonderfully
-compact and easy to write, but provides no consistent rules for
-representing mixed or phased calls, and different groups often improvise
-their own conventions.</p>
+single codons or CVMNK for multi-locus <em>pfcrt</em> haplotypes — is
+wonderfully compact and easy to write, but provides no consistent rules
+for representing mixed or phased calls, and different groups often
+improvise their own conventions.</p>
 <p>At the other extreme, formats like <a href="https://samtools.github.io/hts-specs/VCFv4.2.pdf" class="external-link">VCF</a> and
 standards such as <a href="https://hgvs-nomenclature.org/stable/background/simple/" class="external-link">HGVS</a>
 and <a href="https://www.ga4gh.org/product/variation-representation/" class="external-link">GA4GH
@@ -175,10 +178,20 @@ DNA level. However, these are designed for individual-level,
 nucleotide-resolved data and become either irrelevant (e.g. phasing
 differences that collapse to the same amino acid) or extremely verbose
 when applied to the short haplotypes often found in MMS.</p>
-<p>There is a clear gap for something in between: a lightweight,
-human-readable encoding that is still rich enough to capture features
-needed for prevalence estimation. This was the motivation behind
-developing the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring</a>
+<p>Sitting on top of this are statistical issues related to prevalence
+estimation. For example, if a haplotype has two or more unphased mixed
+calls then it becomes statistically impossible to know with 100%
+confidence whether a particular haplotype is present within this
+mixture. However, if we focus on a short sub-region of this haplotype
+where there are one or fewer mixed loci then this issue goes away, and
+we can resolve the haplotypes exactly. Therefore, the question of how we
+<strong>encode the data</strong> vs. how we <strong>estimate prevalence
+from the data</strong> are not exactly the same thing, and an ideal
+encoding would allow prevalence estimation using all available
+information.</p>
+<p>There is a clear gap for a lightweight, human-readable encoding that
+is still rich enough to capture features needed for prevalence
+estimation. This was the motivation behind developing the <a href="https://github.com/mrc-ide/variantstring" class="external-link">variantstring</a>
 format: a compact, human-readable way to encode amino-acid variation
 that sits between informal shorthand like CVMNK and heavyweight
 standards like HGVS or VRS.</p>
@@ -188,8 +201,7 @@ standards like HGVS or VRS.</p>
 written as</p>
 <pre><code><span><span class="va">pfcrt</span><span class="op">:</span><span class="fl">72</span><span class="op">-</span><span class="fl">76</span><span class="op">:</span><span class="va">C_V_I</span><span class="op">/</span><span class="va">M_E</span><span class="op">/</span><span class="va">N_T</span><span class="op">/</span><span class="va">K</span></span></code></pre>
 <p>This is short enough to be manually entered if needed - for example
-when extracting data from academic publications - while also containing
-rich information on ambiguities.</p>
+when extracting data from academic publications.</p>
 <p>For aggregated count data, each variantstring can be paired with a
 numerator (the number of samples in which that variant appears) and a
 denominator (the number of samples successfully sequenced at the
@@ -200,9 +212,6 @@ have unambiguous information over exactly those positions. For example,
 in the unphased mixture shown above, we cannot assert the presence of
 the CVIET haplotype itself, but we can say that codon 74 contains both
 the <code>I</code> and <code>M</code> alleles.</p>
-<p>By separating the <strong>encoding</strong> of the genetic
-information from the <strong>prevalence</strong> of a variant, we
-maintain flexibility and rigour.</p>
 </div>
 <div class="section level3">
 <h3 id="relational-structure">Relational structure<a class="anchor" aria-label="anchor" href="#relational-structure"></a>
@@ -246,8 +255,7 @@ in the context of a specific survey and study.</li>
 <hr>
 <p>The <a href="articles/studies_table.html">next few pages</a> go into
 the specific formatting requirements of each of these three linked
-tables. If you prefer to get stuck into code, the <a href="articles/reading_in_data.html">tutorials</a> use an example
-dataset that comes pre-loaded with STAVE.</p>
+tables.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

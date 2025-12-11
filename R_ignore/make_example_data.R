@@ -42,3 +42,9 @@ example_input <- list(studies = df_studies,
                       counts = df_counts)
 
 save(example_input, file = here("data", "example_input.rda"))
+
+# also save to inst/extdata, which is used in download links
+write.csv(df_studies, file = here("inst", "extdata", "vignettes", "studies_example.csv"), row.names = FALSE)
+write.csv(df_surveys, file = here("inst", "extdata", "vignettes", "surveys_example.csv"), row.names = FALSE)
+write.csv(df_counts, file = here("inst", "extdata", "vignettes", "counts_example.csv"), row.names = FALSE)
+

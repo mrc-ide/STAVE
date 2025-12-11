@@ -1,42 +1,49 @@
-url: ~
+
+title: STAVE
+
 template:
   bootstrap: 5
-  bootswatch: simplex
-  assets:
-    css:
-      - extra.css
+  params:
+    bootswatch: simplex
 
 navbar:
-  title: DRpower
+  title: STAVE
   left:
     - text: How it works
       menu:
         - text: Core Design Principles
           href: articles/howto_core_design_principles.html
+          
+        - text: -------
+        - text: The Relational Data Structure
         - text: The Studies Table
           href: articles/howto_studies_table.html
         - text: The Surveys Table
           href: articles/howto_surveys_table.html
         - text: The Counts Table
           href: articles/howto_counts_table.html
+        - text: -------
+
         - text: How To Encode Genetic Data
           href: articles/howto_encoding_data.html
         - text: Calculating prevalence
           href: articles/howto_calculating_prevalence.html
         - text: Cautionary Notes
           href: articles/howto_cautionary_notes.html
+
     - text: Installation
       href: articles/installation.html
+
     - text: Tutorials
       menu:
         - text: Reading in Data
           href: articles/tutorial_reading_in_data.html
         - text: Calculating Prevalence
           href: articles/tutorial_calculating_prevalence.html
-#        - text: Aggregating and mapping results
-#          href: articles/aggregating.html
+
     - text: Functions
       href: reference/index.html
+
   right:
-   - icon: fa-github
-     href: https://github.com/mrc-ide/stave
+    - icon: fa-github
+      href: https://github.com/mrc-ide/stave
