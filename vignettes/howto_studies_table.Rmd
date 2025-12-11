@@ -75,7 +75,10 @@ rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background
                       Notes = "A pointer that unambiguously defines the data source. For example a URL to a published paper, or for unpublished data a permanent path to the location where the data are stored. <b>This is one of the most important fields in maintaining data provenance - please complete it as best you can.</b>"),
                  list(Column = "reference_year",
                       Type = "Numeric or `NA`",
-                      Notes = "The calendar year of the source reference.")) |>
+                      Notes = "The calendar year of the source reference."),
+                 list(Column = "PMID",
+                      Type = "Numeric or `NA`",
+                      Notes = "For academic papers, the unique PubMed ID. This optional field can be very useful for data de-duplication.")) |>
   kbl(dformat = "html", escape = FALSE) |>
   kable_styling(full_width = FALSE) |>
   column_spec(1, width = "100px", border_left = "1px solid #ccc", border_right = "1px solid #ccc") |>

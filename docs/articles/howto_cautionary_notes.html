@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,9 +40,12 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-how-it-works">How it works</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-how-it-works">
     <a class="dropdown-item" href="../articles/howto_core_design_principles.html">Core Design Principles</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>The Relational Data Structure</h6>
     <a class="dropdown-item" href="../articles/howto_studies_table.html">The Studies Table</a>
     <a class="dropdown-item" href="../articles/howto_surveys_table.html">The Surveys Table</a>
     <a class="dropdown-item" href="../articles/howto_counts_table.html">The Counts Table</a>
+    <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/howto_encoding_data.html">How To Encode Genetic Data</a>
     <a class="dropdown-item" href="../articles/howto_calculating_prevalence.html">Calculating prevalence</a>
     <a class="dropdown-item" href="../articles/howto_cautionary_notes.html">Cautionary Notes</a>
@@ -96,10 +99,10 @@
     
 <p>Although STAVE rigorously defines the data structure, there are still
 ways of obtaining misleading results depending on how the data are
-entered. Even worse, given that STAVE encourages the use of exact
-spatial coordinates, this structure has the potential to identify
-individuals suffering from malaria, which has ethical implications. This
-section highlights some common pitfalls and how to avoid them.</p>
+entered. Given that STAVE encourages the use of exact spatial
+coordinates, this structure also has the potential to identify
+individuals, which has ethical implications. This section highlights
+some common pitfalls and how to avoid them.</p>
 <div class="section level2">
 <h2 id="do-i-need-to-record-wild-type-samples">Do I need to record wild type samples?<a class="anchor" aria-label="anchor" href="#do-i-need-to-record-wild-type-samples"></a>
 </h2>
@@ -123,6 +126,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -141,6 +147,9 @@ crt:72-76:CVIET
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -157,6 +166,9 @@ crt:72-76:SVMNT
 </td>
 <td style="text-align:right;">
 100
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 <tr>
@@ -175,6 +187,9 @@ crt:72-76:CVMNK
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 </tbody>
 </table>
@@ -185,7 +200,7 @@ of any allele at any locus and obtain a correct result. For example,
 here is the prevalence of the wild-type allele (<code>C</code>) at codon
 72:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>s<span class="sc">$</span><span class="fu">get_prevalence</span>(<span class="at">target_variant =</span> <span class="st">"crt:72:C"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  ... <span class="co"># (only show some columns)</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  ... <span class="co"># (further filters to only show some columns)</span></span></code></pre></div>
 <table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
 <thead><tr>
 <th style="text-align:left;">
@@ -253,6 +268,9 @@ variant_num
 <th style="text-align:right;">
 total_num
 </th>
+<th style="text-align:left;">
+notes
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -271,6 +289,9 @@ crt:72-76:CVIET
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -288,13 +309,16 @@ crt:72-76:SVMNT
 <td style="text-align:right;">
 100
 </td>
+<td style="text-align:left;">
+NA
+</td>
 </tr>
 </tbody>
 </table>
 <p>What happens if we now attempt to estimate the prevalence of 72
 C?</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>s<span class="sc">$</span><span class="fu">get_prevalence</span>(<span class="at">target_variant =</span> <span class="st">"crt:72:C"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  ... <span class="co"># (only show some columns)</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  ... <span class="co"># (further filters to only show some columns)</span></span></code></pre></div>
 <table style="width:100%; white-space: nowrap; margin-left: auto; margin-right: auto;" class="table table table-hover table-condensed">
 <thead><tr>
 <th style="text-align:right;">
@@ -361,9 +385,6 @@ errors.</li>
 <li>If it is not available, be cautious when querying allele-level
 prevalence, especially for positions that are wild-type in the reference
 haplotype (e.g. <em>mdr1</em> N86).</li>
-<li>When only mutant haplotypes are reported, the safest queries are
-those that target exactly the mutations that were reported, not their
-complements.</li>
 </ul>
 </div>
 </div>
@@ -371,9 +392,9 @@ complements.</li>
 <h2 id="restricted-or-identifying-data">Restricted or identifying data<a class="anchor" aria-label="anchor" href="#restricted-or-identifying-data"></a>
 </h2>
 <p>STAVE is designed to handle both public and non-public datasets. The
-access_level field allows users to mark each study as public,
-restricted, or private, and STAVE itself places no limitations on
-loading or analysing restricted material. This design choice allows
+<code>access_level</code> field allows users to mark each study as
+public, restricted, or private, and STAVE itself places no limitations
+on loading or analysing restricted material. This design choice allows
 individual laboratories and surveillance teams to use STAVE with their
 own internal datasets, even when those datasets cannot be shared
 publicly.</p>
@@ -393,16 +414,16 @@ in aggregated form.</p>
 <p>For this reason, <strong>users must ensure that the spatial and
 temporal resolution of their data is ethically and legally
 appropriate</strong>. This may require intentionally reducing precision
-— for example, by jittering, rounding, or otherwise pseudonymising
+— for example, by jittering, rounding, or otherwise anonymising
 coordinates before constructing a STAVE object. If such steps are taken,
 they should be clearly documented in the <code>location_notes</code>
 (and, if relevant, <code>time_notes</code>) fields so that any
 downstream user understands the provenance and limitations of the
 spatial information.</p>
 <hr>
-<p>If you have read all the documentation up to this point, then bless
-you! You should have a good understanding of how STAVE works, and are
-ready to jump to the <a href="articles/installation.html">Installation</a> and <a href="articles/reading_in_data.html">Tutorials</a> sections to start
+<p>If you have read all the documentation up to this point, then god
+bless you! You should have a good understanding of how STAVE works, and
+are ready to jump to the <a href="articles/installation.html">Installation</a> and <a href="articles/reading_in_data.html">Tutorials</a> sections to start
 putting some of these ideas into practice.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
