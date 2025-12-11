@@ -22,7 +22,7 @@ Imports:
     tidyr,
     variantstring
 Remotes:
-    mrc-ide/variantstring@v1.8.3
+    mrc-ide/variantstring@v1.8.6
 RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0),
