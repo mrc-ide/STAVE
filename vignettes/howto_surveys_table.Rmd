@@ -105,4 +105,4 @@ rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background
 
 ---
 
-The [next page](articles/counts_table.html) shows how to encode genetic data in the *Counts* table.
+The [next page](articles/howto_counts_table.html) shows how to encode genetic data in the *Counts* table.

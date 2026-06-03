@@ -17,10 +17,10 @@ STAVE is deliberately minimal: it does not attempt to handle individual-level da
 
 ## Getting started
 
-To learn how the STAVE data structure works, see [How it works](articles/core_design_principles.html).
+To learn how the STAVE data structure works, see [How it works](articles/howto_core_design_principles.html).
 
 When you’re ready to start working with the package, visit:
 
 - [Installation](articles/installation.html) – how to install the package
-- [Tutorials](articles/reading_in_data.html) – practical examples of common tasks
+- [Tutorials](articles/tutorial_reading_in_data.html) – practical examples of common tasks
 

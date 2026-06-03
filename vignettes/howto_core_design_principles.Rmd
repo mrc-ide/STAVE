@@ -71,5 +71,5 @@ STAVE uses a three-table relational layout built around this idea: studies, surv
 
 ---
 
-The [next few pages](articles/studies_table.html) go into the specific formatting requirements of each of these three linked tables.
+The [next few pages](articles/howto_studies_table.html) go into the specific formatting requirements of each of these three linked tables.
 
