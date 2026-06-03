@@ -71,7 +71,7 @@ rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background
                       Type = "Numeric integer",
                       Notes = "The total number of samples successfully sequenced at this subset of loci. In other words, the number of samples that <i>could have produced</i> the observed variant."),
                  list(Column = "notes",
-                      Type = "Character string",
+                      Type = "Character string or `NA`",
                       Notes = "Any further information about this mutation (free text).")) |>
   kbl(dformat = "html", escape = FALSE) |>
   kable_styling(full_width = FALSE) |>
@@ -84,8 +84,8 @@ rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background
 
 ## *variantstring* format
 
-The *variantstring* format is defined in the [*variantstring*](https://github.com/mrc-ide/variantstring) package - refer to that package documentation for details. The current version of STAVE uses *variantstring* v1.8.3.
+The *variantstring* format is defined in the [*variantstring*](https://github.com/mrc-ide/variantstring) package - refer to that package documentation for details. The current version of STAVE uses *variantstring* v1.8.6.
 
 ---
 
-The [next page](articles/counts_format.html) demonstrates some of the nuances of encoding genetic data.
+The [next page](articles/howto_encoding.html) demonstrates some of the nuances of encoding genetic data.

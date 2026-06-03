@@ -114,4 +114,4 @@ Overall, there is a balance to strike between capturing everything and capturing
 
 ---
 
-The [next page](articles/calculating_prevalence.html) goes into the details of how prevalence is calculated from the encoded data.
+The [next page](articles/howto_calculating_prevalence.html) goes into the details of how prevalence is calculated from the encoded data.

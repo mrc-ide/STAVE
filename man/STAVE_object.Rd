@@ -125,9 +125,12 @@ PMID, notes. Compulsory fields (no missing values) are: study_id and reference.}
 \item{\code{surveys_dataframe}}{a data frame containing information at the
 survey level. This data.frame must have the following columns:
 study_id, survey_id, country_name, site_name, latitude, longitude, location_method,
-location_notes, collection_start, collection_end, collection_day, time_method,
-time_notes. Compulsory fields (no missing values) are: study_id, survey_id,
-latitude, longitude, collection_day.}
+location_notes, sample_source, collection_start, collection_end, collection_day,
+time_method, time_notes. Compulsory fields (no missing values) are: study_id,
+survey_id, sample_source, latitude, longitude, collection_day. The sample_source
+field must be one of: \code{"clinical_passive"}, \code{"clinical_anc"},
+\code{"clinical_tes"}, \code{"clinical_trial"}, \code{"community_household"},
+\code{"community_school"}, \code{"cohort"}, \code{"other"}, \code{"unknown"}.}
 
 \item{\code{counts_dataframe}}{a data.frame of genetic information. Must contain
 the following columns: study_id, survey_id, variant_string, variant_num,

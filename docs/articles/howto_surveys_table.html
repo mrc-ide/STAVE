@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,6 +132,9 @@ location_method
 location_notes
 </th>
 <th style="text-align:left;">
+sample_source
+</th>
+<th style="text-align:left;">
 collection_start
 </th>
 <th style="text-align:left;">
@@ -172,6 +175,9 @@ WWARN lat and long
 </td>
 <td style="text-align:left;">
 NA
+</td>
+<td style="text-align:left;">
+clinical_trial
 </td>
 <td style="text-align:left;">
 2014-01-01
@@ -215,6 +221,9 @@ WWARN lat and long
 NA
 </td>
 <td style="text-align:left;">
+clinical_trial
+</td>
+<td style="text-align:left;">
 2017-01-01
 </td>
 <td style="text-align:left;">
@@ -254,6 +263,9 @@ WWARN lat and long
 </td>
 <td style="text-align:left;">
 NA
+</td>
+<td style="text-align:left;">
+clinical_trial
 </td>
 <td style="text-align:left;">
 2017-01-01
@@ -297,6 +309,9 @@ WWARN lat and long
 NA
 </td>
 <td style="text-align:left;">
+clinical_trial
+</td>
+<td style="text-align:left;">
 2017-01-01
 </td>
 <td style="text-align:left;">
@@ -338,6 +353,9 @@ WWARN lat and long
 NA
 </td>
 <td style="text-align:left;">
+clinical_trial
+</td>
+<td style="text-align:left;">
 2017-01-01
 </td>
 <td style="text-align:left;">
@@ -377,6 +395,9 @@ WWARN lat and long
 </td>
 <td style="text-align:left;">
 NA
+</td>
+<td style="text-align:left;">
+clinical_trial
 </td>
 <td style="text-align:left;">
 2017-01-01
@@ -524,6 +545,50 @@ Any other important notes pertaining to the location (free text).
 </tr>
 <tr>
 <td style="text-align:left;width: 100px; border-left:1px solid #ccc;border-right:1px solid #ccc;">
+<span style="     color: white !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: rgba(3, 102, 214, 255) !important;">sample_source</span>
+</td>
+<td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
+Character string. One of a pre-defined set of levels.
+</td>
+<td style="text-align:left;border-right:1px solid #ccc;">
+The sampling context from which samples were obtained.
+<ul style="margin:4px 0; padding-left:1.2em;">
+<li>
+<code>clinical_passive</code> — symptomatic patients self-presenting to
+a health facility
+</li>
+<li>
+<code>clinical_anc</code> — pregnant women screened at antenatal care
+</li>
+<li>
+<code>clinical_tes</code> — WHO therapeutic efficacy study
+</li>
+<li>
+<code>clinical_trial</code> — other formal clinical trial or RCT
+</li>
+<li>
+<code>community_household</code> — cross-sectional survey of residents
+at home or in the community
+</li>
+<li>
+<code>community_school</code> — school-based survey of children
+</li>
+<li>
+<code>cohort</code> — longitudinal follow-up of a defined enrolled
+cohort
+</li>
+<li>
+<code>other</code> —any other context not listed
+</li>
+<li>
+<code>unknown</code> — sampling context not recorded or cannot be
+determined from the source
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;width: 100px; border-left:1px solid #ccc;border-right:1px solid #ccc;">
 collection_start
 </td>
 <td style="text-align:left;width: 150px; border-right:1px solid #ccc;">
@@ -583,8 +648,8 @@ Any other important notes pertaining to the collection time (free text).
 </tbody>
 </table>
 <hr>
-<p>The <a href="articles/counts_table.html">next page</a> shows how to
-encode genetic data in the <em>Counts</em> table.</p>
+<p>The <a href="articles/howto_counts_table.html">next page</a> shows
+how to encode genetic data in the <em>Counts</em> table.</p>
 </div>
   </main>
 </div>

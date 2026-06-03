@@ -100,9 +100,12 @@ STAVE_object <- R6::R6Class(
     #' @param surveys_dataframe a data frame containing information at the
     #'   survey level. This data.frame must have the following columns:
     #'   study_id, survey_id, country_name, site_name, latitude, longitude, location_method,
-    #'   location_notes, collection_start, collection_end, collection_day, time_method,
-    #'   time_notes. Compulsory fields (no missing values) are: study_id, survey_id,
-    #'   latitude, longitude, collection_day.
+    #'   location_notes, sample_source, collection_start, collection_end, collection_day,
+    #'   time_method, time_notes. Compulsory fields (no missing values) are: study_id,
+    #'   survey_id, sample_source, latitude, longitude, collection_day. The sample_source
+    #'   field must be one of: \code{"clinical_passive"}, \code{"clinical_anc"},
+    #'   \code{"clinical_tes"}, \code{"clinical_trial"}, \code{"community_household"},
+    #'   \code{"community_school"}, \code{"cohort"}, \code{"other"}, \code{"unknown"}.
     #' @param counts_dataframe a data.frame of genetic information. Must contain
     #'   the following columns: study_id, survey_id, variant_string, variant_num,
     #'   total_num, notes. The only non-compulsory field is notes.
@@ -445,10 +448,11 @@ STAVE_object <- R6::R6Class(
       
       # basic structure
       assert_dataframe(surveys_dataframe)
-      assert_ncol(surveys_dataframe, 13)
-      assert_eq(names(surveys_dataframe), c("study_id", "survey_id", "country_name", "site_name", "latitude",
-                                            "longitude", "location_method", "location_notes", "collection_start",
-                                            "collection_end", "collection_day", "time_method", "time_notes"))
+      assert_ncol(surveys_dataframe, 14)
+      assert_eq(names(surveys_dataframe), c("study_id", "survey_id", "country_name", "site_name",
+                                            "latitude", "longitude", "location_method", "location_notes",
+                                            "sample_source", "collection_start", "collection_end",
+                                            "collection_day", "time_method", "time_notes"))
       
       # study_key (compulsory)
       assert_non_NA(surveys_dataframe$study_id)
@@ -457,7 +461,13 @@ STAVE_object <- R6::R6Class(
       # survey_id (compulsory)
       assert_non_NA(surveys_dataframe$survey_id)
       assert_valid_string(surveys_dataframe$survey_id, message_name = "survey_id in surveys_dataframe")
-      
+
+      # sample_source (compulsory)
+      assert_non_NA(surveys_dataframe$sample_source)
+      assert_in(surveys_dataframe$sample_source, c("clinical_passive", "clinical_anc", "clinical_tes",
+                                                    "clinical_trial", "community_household", "community_school",
+                                                    "cohort", "other", "unknown"))
+
       # country_name
       w <- which(!is.na(surveys_dataframe$country_name))
       if (any(w)) {

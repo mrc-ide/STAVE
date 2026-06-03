@@ -99,4 +99,4 @@ Beyond these restrictions, any naming convention can be used. However, it is rec
 
 ---
 
-The [next page](articles/surveys_format.html) shows how to specify location and time data in the *Surveys* table.
+The [next page](articles/howto_surveys_format.html) shows how to specify location and time data in the *Surveys* table.

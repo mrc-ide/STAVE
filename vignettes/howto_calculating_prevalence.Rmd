@@ -100,4 +100,4 @@ More complex situations, such as partial phasing or more than two alleles at a l
 
 ---
 
-The [next page](articles/cautionary_notes.html) goes on to explain some of the ways that we must be careful when entering or interpreting data.
+The [next page](articles/howto_cautionary_notes.html) goes on to explain some of the ways that we must be careful when entering or interpreting data.

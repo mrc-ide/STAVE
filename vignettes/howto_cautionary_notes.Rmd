@@ -131,4 +131,4 @@ For this reason, **users must ensure that the spatial and temporal resolution of
 
 ---
 
-If you have read all the documentation up to this point, then god bless you! You should have a good understanding of how STAVE works, and are ready to jump to the [Installation](articles/installation.html) and [Tutorials](articles/reading_in_data.html) sections to start putting some of these ideas into practice.
+If you have read all the documentation up to this point, then god bless you! You should have a good understanding of how STAVE works, and are ready to jump to the [Installation](articles/installation.html) and [Tutorials](articles/tutorial_reading_in_data.html) sections to start putting some of these ideas into practice.

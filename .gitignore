@@ -5,3 +5,4 @@
 ignore/
 inst/doc
 .DS_Store
+.positai
