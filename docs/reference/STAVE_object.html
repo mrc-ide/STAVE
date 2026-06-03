@@ -14,7 +14,7 @@ package is through this class in the form of member functions."><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">STAVE</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -184,9 +184,12 @@ PMID, notes. Compulsory fields (no missing values) are: study_id and reference.<
 <dd><p>a data frame containing information at the
 survey level. This data.frame must have the following columns:
 study_id, survey_id, country_name, site_name, latitude, longitude, location_method,
-location_notes, collection_start, collection_end, collection_day, time_method,
-time_notes. Compulsory fields (no missing values) are: study_id, survey_id,
-latitude, longitude, collection_day.</p></dd>
+location_notes, sample_source, collection_start, collection_end, collection_day,
+time_method, time_notes. Compulsory fields (no missing values) are: study_id,
+survey_id, sample_source, latitude, longitude, collection_day. The sample_source
+field must be one of: <code>"clinical_passive"</code>, <code>"clinical_anc"</code>,
+<code>"clinical_tes"</code>, <code>"clinical_trial"</code>, <code>"community_household"</code>,
+<code>"community_school"</code>, <code>"cohort"</code>, <code>"other"</code>, <code>"unknown"</code>.</p></dd>
 
 
 <dt><code>counts_dataframe</code></dt>
