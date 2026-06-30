@@ -84,7 +84,7 @@ rbind.data.frame(list(Column = cell_spec("study_id", color = "white", background
 
 ## *variantstring* format
 
-The *variantstring* format is defined in the [*variantstring*](https://github.com/mrc-ide/variantstring) package - refer to that package documentation for details. The current version of STAVE uses *variantstring* v1.8.6.
+The *variantstring* format is defined in the [*variantstring*](https://github.com/mrc-ide/variantstring) package - refer to that package documentation for details. The current version of STAVE uses *variantstring* v1.8.7.
 
 ---
 
