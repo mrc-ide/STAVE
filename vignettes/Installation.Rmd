@@ -30,7 +30,7 @@ remotes::install_github("mrc-ide/STAVE")
 It is good practice to specify a version number to ensure your scripts will run even if the package changes over time. To install a specific version you can use the `@` symbol as follows:
 
 ``` r
-remotes::install_github("mrc-ide/STAVE@v2.0.2")
+remotes::install_github("mrc-ide/STAVE@v2.0.4")
 ```
 
 see the "Tags" section of the [main Github page](https://github.com/mrc-ide/STAVE) for the latest version number.

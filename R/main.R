@@ -514,7 +514,7 @@ STAVE_object <- R6::R6Class(
       
       # collection_day (compulsory)
       assert_non_NA(surveys_dataframe$collection_day)
-      assert_class(surveys_dataframe$collection_day[w], "Date")
+      assert_class(surveys_dataframe$collection_day, "Date")
       
       # time_method
       w <- which(!is.na(surveys_dataframe$time_method))
